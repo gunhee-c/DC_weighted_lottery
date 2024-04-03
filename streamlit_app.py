@@ -1,5 +1,5 @@
 import streamlit as st
-from Weighted_Lottery_Base import *
+#from Weighted_Lottery_Base import *
 
 
 # Title
