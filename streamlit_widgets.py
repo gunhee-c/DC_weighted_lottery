@@ -26,16 +26,25 @@ def userinput_widget(key, check_user_exists, check_user_list, assigned_users = N
 def unit_userinput_widget(key, i, names, check_user_exists, check_user_list, assigned_user = None):
     # Create a row of 2 columns
     col1, col2 = st.columns(2)
+    addme = ""
     if assigned_user:
         placeholder_name = assigned_user
+        addme = "(Assigned)"
     else:
         placeholder_name = "This is a placeholder"
     with col1:  # Use the first column for the name input
-        name = st.text_input(
-            "이름/닉네임을 입력하세요",
-            placeholder=placeholder_name,
-            key=f'{key}_name_{i}'  # Unique key for each name input
-        )
+        if assigned_user:
+            name = st.text_input(
+                "이름/닉네임을 입력하세요",
+                value=placeholder_name,
+                key=f'{key}_name_{i}{addme}'  # Unique key for each name input
+            )
+        else:
+            name = st.text_input(
+                "이름/닉네임을 입력하세요",
+                placeholder=placeholder_name,
+                key=f'{key}_name_{i}{addme}'  # Unique key for each name input
+            )
 
     with col2:  # Use the second column for the score input
         score = st.number_input(
@@ -44,7 +53,7 @@ def unit_userinput_widget(key, i, names, check_user_exists, check_user_list, ass
             step=1, 
             min_value=0, 
             format="%d",
-            key=f'{key}_score_{i}'  # Unique key for each score input
+            key=f'{key}_score_{i}{addme}'  # Unique key for each score input
         )
     if assigned_user == False:
         if name in names:
