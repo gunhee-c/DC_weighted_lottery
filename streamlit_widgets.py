@@ -87,8 +87,9 @@ def get_event_input(key, check_user_exists, check_user_list):
 def get_event_input_radio(key, check_user_exists, check_user_list):
 
     pickme = st.radio(
-        "해당 이벤트 후보자 = 전체 후보자인가요?",
-        ["Yes", "No"],
+        key = key,
+        label= "해당 이벤트 후보자 = 전체 후보자인가요?",
+        options = ["Yes", "No"],
         horizontal=True
     )
     if pickme == "Yes":
