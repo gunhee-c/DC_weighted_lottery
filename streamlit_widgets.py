@@ -92,6 +92,10 @@ def get_event_input(key, check_user_exists, check_user_list, var_name):
     st.write("---")
 
     for i in range(num_events):
+        st.header(f"이벤트 {i+1}: ")
+        event_name = st.checkbox("이벤트 명 입력", key=f'{key}_event_check_{i}')
+        if event_name:
+            st.text_input("이벤트 명을 입력하세요", key=f'{key}_event_name_{i}')
         event_data, event_prize, event_prize_count, event_formula, event_var  = get_event_input_radio(key+str(i), check_user_exists, check_user_list, var_name)
         event_data_list.append(event_data)
         event_prize_list.append(event_prize)
@@ -119,6 +123,7 @@ def get_event_input_radio(key, check_user_exists, check_user_list, var_name):
     if pickme == "Yes":
         event_data = userinput_widget(key+"Yes", check_user_exists, check_user_list, assign_users = True)
     if pickme == "No":  
+        st.markdown(":gray[No를 누른 뒤 Yes를 누르면 데이터가 초기화됩니다.]")
         st.write("참가자 명단을 확인하세요")
         st.write(check_user_list)  
         event_data = userinput_widget(key+"No", check_user_exists, check_user_list, max_users = len(check_user_list))
