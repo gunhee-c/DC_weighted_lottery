@@ -49,8 +49,8 @@ def unit_userinput_widget(key, i, names, check_user_exists, check_user_list):
 def tokenize_text(text):
     return text.split("\n")
 
-def get_user_input(check_user_exists = False, check_user_list = None):
-    names, scores = userinput_widget("user_input", check_user_exists, check_user_list)
+def get_user_input(key, check_user_exists = False, check_user_list = None):
+    names, scores = userinput_widget(key, check_user_exists, check_user_list)
     return names, scores
 '''
 def get_user_input():    
