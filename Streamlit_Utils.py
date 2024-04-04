@@ -12,10 +12,11 @@ def parse_loaded_script(script_text):
     variable_name = ""
     for lines in script_text:
         lines = lines.strip()
-        #print(lines)
-        #print(script_tokens)
+        print(lines)
         if lines == "%END%":
-            #print("ending detected")
+            print("ending detected")
+            print(variable_name)
+            print(script_tokens)
             scripts[variable_name] = script_tokens
             flag = False
 
@@ -25,7 +26,7 @@ def parse_loaded_script(script_text):
         if flag == True:
             script_tokens.append(lines)
         
-        if lines.startswith("%Script"):
+        if lines.startswith("%SCRIPT%"):
             variable_name = lines[10:]
             flag = True
     return scripts
