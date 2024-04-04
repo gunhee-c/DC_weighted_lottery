@@ -1,8 +1,7 @@
 import streamlit as st
 #from Weighted_Lottery_Base import *
 
-try1 = +\
-"""
+try1 = """
 나는 짱
 나는 최고
 """
