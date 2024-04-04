@@ -5,9 +5,9 @@ import time
 class Candidate:
     
     #누가 참여하는지 + 기본값
-    def __init__(self, candidate_name_list, candidate_init_value_list):
+    def __init__(self, candidate_dict):
         """Initialize the candidate with name and initial values."""
-        self.candidate_dict = dict(zip(candidate_name_list, candidate_init_value_list))
+        self.candidate_dict = candidate_dict
         self.polling_event = []
 
     def parse_polling_formula(self, formula, var1, var2):
@@ -55,9 +55,9 @@ class Candidate:
         return "\n".join(details)
     
 class PollingEvent:
-    def __init__(self, event_name_list, event_value_list, prize_name, prize_count):
+    def __init__(self, event_dict, prize_name, prize_count):
         print("hi")
-        self.event_participants = dict(zip(event_name_list, event_value_list))
+        self.event_participants = event_dict
         self.prize_name = prize_name
         self.prize_count = prize_count
         self.event_evaluated = {}
