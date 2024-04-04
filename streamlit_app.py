@@ -9,21 +9,20 @@ r = su.script_text_loader('streamlit_script.txt')
 r_load = su.parse_loaded_script(r)
 
 # Title
-st.title('가중치/단계적 추첨')
-with st.expander("이 페이지는.."):
-    su.script_text_writer(r_load, 'head') 
-
-
-st.write('---')
 
 #tab1, tab2, tab3, tab4 = st.sidebar(['후보자 정보 입력', '추첨 정보', '추첨 진행', '결과 확인'])
 with st.sidebar:
-    option_choice = option_menu("가중치/단계적 추첨", ["후보자 정보 입력", "추첨 정보", "추첨 진행", "결과 확인"])
+    option_choice = option_menu("가중치/단계적 추첨", ["페이지 소개", "후보자 정보 입력", "추첨 정보", "추첨 진행", "결과 확인"])
+if option_choice == "페이지 소개":
+    with st.expander("이 페이지는.."):
+        su.script_text_writer(r_load, 'head') 
+
 if option_choice == "후보자 정보 입력":
     su.script_text_writer(r_load, 'tab1_info')
     candidates_info, var_name = sw.get_user_input(key = "tab1")
     st.write("Candidates and their scores:")
     st.write(candidates_info)
+    
 if option_choice == "추첨 정보":
     su.script_text_writer(r_load, 'tab2_info')
     event_name_list,event_data_list, event_prize_list, event_prize_count_list, event_formula_list, event_var_list = \
