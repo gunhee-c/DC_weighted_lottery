@@ -6,7 +6,7 @@ r_load = su.parse_loaded_script(r)
 
 def userinput_widget(key, check_user_exists, check_user_list, assigned_users = None):
     if assigned_users:
-        st.write("assigned users: ", assigned_users)
+        st.write("# of assigned users: ", len(assigned_users))
         num_candidates = len(assigned_users)
     else:
         num_candidates = st.number_input("후보자 수를 입력하세요", value=1, step=1, min_value=0, key=f'{key}_num_candidates', format="%d")        
