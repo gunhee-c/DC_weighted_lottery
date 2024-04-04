@@ -72,10 +72,10 @@ def unit_userinput_widget(key, i, names, check_user_exists, check_user_list, ass
     return [name, score]
 
 def get_user_input(key, check_user_exists = False, check_user_list = None):
-    names, scores = userinput_widget(key, check_user_exists, check_user_list)
+    user_input_dict = userinput_widget(key, check_user_exists, check_user_list)
     st.write("마지막으로..")
     st.text_input("변수명을 입력하세요", key=f'{key}_variable_name')
-    return names, scores
+    return user_input_dict
 
 def get_event_input(key, check_user_exists, check_user_list):
     num_events = st.number_input("이벤트 수를 입력하세요", value=1, step=1, min_value=0, key=f'{key}_num_candidates', format="%d")        
