@@ -1,6 +1,7 @@
 import streamlit as st
 #from Weighted_Lottery_Base import *
 import Streamlit_Utils as su
+import streamlit_widgets as sw
 
 r = su.script_text_loader('streamlit_script.txt')
 r_load = su.parse_loaded_script(r)
@@ -15,14 +16,12 @@ st.write('---')
 
 tab1, tab2, tab3 = st.tabs(['후보자 정보 입력', '추첨 정보', '추첨 진행'])
 
-if tab1:
-    
+with tab1:
     su.script_text_writer(r_load, 'tab1_info')
-
-
-if tab2:
+    sw.get_user_input()
+with tab2:
     su.script_text_writer(r_load, 'tab2_info')
 
 
-if tab3:
+with tab3:
     su.script_text_writer(r_load, 'tab3_info')
