@@ -4,24 +4,30 @@ import Streamlit_Utils as su
 r = su.script_text_loader('streamlit_script.txt')
 r_load = su.parse_loaded_script(r)
 
-def userinput_widget(key, check_user_exists, check_user_list, assigned_users = None):
-    if assigned_users:
-        st.write("number of assigned users: ", len(assigned_users))
-        num_candidates = len(assigned_users)
+def userinput_widget(key, check_user_exists, check_user_list, assign_users = False):
+    try:
+        user_list = list(check_user_list.keys())
+    except:
+        user_list = None
+
+    if assign_users:
+        st.write("number of assigned users: ", len(check_user_list))
+        num_candidates = len(check_user_list)
     else:
         num_candidates = st.number_input("후보자 수를 입력하세요", value=1, step=1, min_value=0, key=f'{key}_num_candidates', format="%d")        
+    
     names = []
     scores = []
+
     for i in range(num_candidates):
-        if assigned_users:
-            name, score = unit_userinput_widget(key, i,names, check_user_exists, check_user_list, assigned_users[i])
+        if assign_users:
+            name, score = unit_userinput_widget(key, i,names, check_user_exists, user_list, user_list[i])
         else:
-            name, score = unit_userinput_widget(key, i,names, check_user_exists, check_user_list)
+            name, score = unit_userinput_widget(key, i,names, check_user_exists, user_list)
         names.append(name)
         scores.append(score)
     st.write("Candidates and their scores:")
-    st.write(dict(zip(names, scores)))
-    return names, scores
+    return dict(zip(names, scores))
 
 def unit_userinput_widget(key, i, names, check_user_exists, check_user_list, assigned_user = None):
     # Create a row of 2 columns
@@ -65,9 +71,6 @@ def unit_userinput_widget(key, i, names, check_user_exists, check_user_list, ass
                 st.stop()
     return [name, score]
 
-def tokenize_text(text):
-    return text.split("\n")
-
 def get_user_input(key, check_user_exists = False, check_user_list = None):
     names, scores = userinput_widget(key, check_user_exists, check_user_list)
     st.write("마지막으로..")
@@ -84,6 +87,7 @@ def get_event_input(key, check_user_exists, check_user_list):
     st.write("---")
 
     for i in range(num_events):
+
         event_name, event_score = get_event_input_radio(key+str(i), check_user_exists, check_user_list)
         event_candidate_names.append(event_name)
         event_scores.append(event_score)
@@ -99,8 +103,10 @@ def get_event_input_radio(key, check_user_exists, check_user_list):
         horizontal=True
     )
     if pickme == "Yes":
-        event_name, event_score = userinput_widget(key+"Yes", check_user_exists, check_user_list, assigned_users=check_user_list)
-    if pickme == "No":    
+        event_name, event_score = userinput_widget(key+"Yes", check_user_exists, check_user_list, assign_users = True)
+    if pickme == "No":  
+        st.write("참가자 명단을 확인하세요")
+        st.write(check_user_list)  
         event_name, event_score = userinput_widget(key+"No", check_user_exists, check_user_list)
 
     return event_name, event_score
