@@ -29,6 +29,8 @@ with tab2:
 
 with tab3:
     su.script_text_writer(r_load, 'tab3_info')
+    with st.expander("참가자 정보:"):
+        st.write(candidates_info)
     st.write("이벤트 정보: ")
     for i in range(len(event_name_list)):
         with st.expander(f"이벤트 {i+1}:" + " " + event_name_list[i]):
