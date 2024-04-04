@@ -19,6 +19,7 @@ tab1, tab2, tab3 = st.tabs(['후보자 정보 입력', '추첨 정보', '추첨 
 with tab1:
     su.script_text_writer(r_load, 'tab1_info')
     sw.get_user_input()
+    sw.create_widget_set()
 with tab2:
     su.script_text_writer(r_load, 'tab2_info')
 
