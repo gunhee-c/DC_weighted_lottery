@@ -16,7 +16,7 @@ with st.expander("이 페이지는.."):
 
 st.write('---')
 
-tab1, tab2, tab3, tab4 = st.sidebar(['후보자 정보 입력', '추첨 정보', '추첨 진행', '결과 확인'])
+#tab1, tab2, tab3, tab4 = st.sidebar(['후보자 정보 입력', '추첨 정보', '추첨 진행', '결과 확인'])
 with st.sidebar:
     option_choice = option_menu("가중치/단계적 추첨", ["후보자 정보 입력", "추첨 정보", "추첨 진행", "결과 확인"])
 if option_choice == "후보자 정보 입력":
