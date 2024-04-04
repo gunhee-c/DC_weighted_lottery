@@ -4,7 +4,7 @@ import Streamlit_Utils as su
 r = su.script_text_loader('streamlit_script.txt')
 r_load = su.parse_loaded_script(r)
 
-def userinput_widget(key, check_user_exists, check_user_list, assign_users = False):
+def userinput_widget(key, check_user_exists, check_user_list, assign_users = False, max_users = None):
     try:
         user_list = list(check_user_list.keys())
     except:
@@ -15,7 +15,10 @@ def userinput_widget(key, check_user_exists, check_user_list, assign_users = Fal
         num_candidates = len(check_user_list)
     else:
         num_candidates = st.number_input("후보자 수를 입력하세요", value=1, step=1, min_value=0, key=f'{key}_num_candidates', format="%d")        
-    
+        if max_users:
+            if num_candidates > max_users:
+                st.error(f"후보자 수는 {max_users}명 이하로 입력하세요.")
+                st.stop()
     names = []
     scores = []
 
@@ -73,8 +76,8 @@ def unit_userinput_widget(key, i, names, check_user_exists, check_user_list, ass
                 #st.stop()
     return [name, score]
 
-def get_user_input(key, check_user_exists = False, check_user_list = None):
-    user_input_dict = userinput_widget(key, check_user_exists, check_user_list)
+def get_user_input(key, check_user_exists = False, check_user_list = None, max_users = None):
+    user_input_dict = userinput_widget(key, check_user_exists, check_user_list, max_users)
     st.write("마지막으로..")
     st.text_input("변수명을 입력하세요", key=f'{key}_variable_name')
     return user_input_dict
@@ -107,8 +110,9 @@ def get_event_input_radio(key, check_user_exists, check_user_list):
     if pickme == "No":  
         st.write("참가자 명단을 확인하세요")
         st.write(check_user_list)  
-        event_data = userinput_widget(key+"No", check_user_exists, check_user_list)
-
+        event_data = userinput_widget(key+"No", check_user_exists, check_user_list, max_users = len(check_user_list))
+    st.write("이벤트 후보자 정보: ")
+    st.write(event_data)
     return event_data
 
 '''
