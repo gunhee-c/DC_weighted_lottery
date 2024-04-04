@@ -79,8 +79,7 @@ def get_user_input(key, check_user_exists = False, check_user_list = None):
 
 def get_event_input(key, check_user_exists, check_user_list):
     num_events = st.number_input("이벤트 수를 입력하세요", value=1, step=1, min_value=0, key=f'{key}_num_candidates', format="%d")        
-    event_candidate_names = []
-    event_scores = []
+    event_data_list = []
     event_prize = []
     event_prize_count = []
     event_formula = []
@@ -88,11 +87,10 @@ def get_event_input(key, check_user_exists, check_user_list):
 
     for i in range(num_events):
 
-        event_name, event_score = get_event_input_radio(key+str(i), check_user_exists, check_user_list)
-        event_candidate_names.append(event_name)
-        event_scores.append(event_score)
+        event_data = get_event_input_radio(key+str(i), check_user_exists, check_user_list)
+        event_data_list.append(event_data)
         st.write("---")
-    return event_candidate_names, event_scores
+    return event_data_list
     
 def get_event_input_radio(key, check_user_exists, check_user_list):
 
@@ -103,13 +101,13 @@ def get_event_input_radio(key, check_user_exists, check_user_list):
         horizontal=True
     )
     if pickme == "Yes":
-        event_name, event_score = userinput_widget(key+"Yes", check_user_exists, check_user_list, assign_users = True)
+        event_data = userinput_widget(key+"Yes", check_user_exists, check_user_list, assign_users = True)
     if pickme == "No":  
         st.write("참가자 명단을 확인하세요")
         st.write(check_user_list)  
-        event_name, event_score = userinput_widget(key+"No", check_user_exists, check_user_list)
+        event_data = userinput_widget(key+"No", check_user_exists, check_user_list)
 
-    return event_name, event_score
+    return event_data
 
 '''
 def get_user_input():    
