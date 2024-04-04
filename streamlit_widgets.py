@@ -4,28 +4,37 @@ import Streamlit_Utils as su
 r = su.script_text_loader('streamlit_script.txt')
 r_load = su.parse_loaded_script(r)
 
-def userinput_widget():
-    num_candidates = st.number_input("후보자 수를 입력하세요", value=1, step=1, min_value=0, format="%d")        
+def userinput_widget(key):
+    num_candidates = st.number_input("후보자 수를 입력하세요", value=1, step=1, min_value=0, key=f'{key}_num_candidates', format="%d")        
     names = []
     scores = []
-    for _ in range(num_candidates):
-        name, score = unit_userinput_widget()
+    for i in range(num_candidates):
+        name, score = unit_userinput_widget(key, i)
         names.append(name)
         scores.append(score)
     print(names, scores)
     return names, scores
-def unit_userinput_widget():
+
+def unit_userinput_widget(key, i):
     # Create a row of 2 columns
     col1, col2 = st.columns(2)
     
     with col1:  # Use the first column for the name input
         name = st.text_input(
             "이름/닉네임을 입력하세요",
-            placeholder="This is a placeholder"
+            placeholder="This is a placeholder",
+            key=f'{key}_name_{i}'  # Unique key for each name input
         )
 
     with col2:  # Use the second column for the score input
-        score = st.number_input("점수를 입력하세요", value=1, step=1, min_value=0, format="%d")
+        score = st.number_input(
+            "점수를 입력하세요", 
+            value=1, 
+            step=1, 
+            min_value=0, 
+            format="%d",
+            key=f'{key}_score_{i}'  # Unique key for each score input
+        )
     
     return [name, score]
 
