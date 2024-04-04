@@ -63,11 +63,13 @@ def unit_userinput_widget(key, i, names, check_user_exists, check_user_list, ass
         )
     if assigned_user == None:
         if name in names:
-            st.error(f"닉네임/이름 {name}: 중복된 데이터가 있습니다.")
+            if name != "":
+               st.error(f"닉네임/이름 {name}: 중복된 데이터가 있습니다.")
             #st.stop()
         if check_user_exists:
             if name not in check_user_list:
-                st.error(f"닉네임/이름 {name}: 참가자 명단에 없습니다.")
+                if name != "":
+                    st.error(f"닉네임/이름 {name}: 참가자 명단에 없습니다.")
                 #st.stop()
     return [name, score]
 
