@@ -12,10 +12,8 @@ def userinput_widget(key):
         name, score = unit_userinput_widget(key, i)
         names.append(name)
         scores.append(score)
-    st.write("Candidates:")
-    st.write(names)
-    st.write("Scores:")
-    st.write(scores)
+    st.write("Candidates and their scores:")
+    st.write(dict(zip(names, scores)))
     return names, scores
 
 def unit_userinput_widget(key, i):
