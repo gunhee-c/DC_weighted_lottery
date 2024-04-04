@@ -21,7 +21,7 @@ with tab1:
     candidates, scores = sw.get_user_input(key = "tab1")
 with tab2:
     su.script_text_writer(r_load, 'tab2_info')
-    sw.get_user_input(key= "tab2", check_user_exists=True, check_user_list= candidates)
+    sw.get_event_input(key= "tab2", check_user_exists=True, check_user_list= candidates)
 
 with tab3:
     su.script_text_writer(r_load, 'tab3_info')
