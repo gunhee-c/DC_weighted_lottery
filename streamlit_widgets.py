@@ -44,6 +44,9 @@ def unit_userinput_widget(key, i):
 def tokenize_text(text):
     return text.split("\n")
 
+def get_user_input():
+    names, scores = userinput_widget("user_input")
+'''
 def get_user_input():    
     pickme = st.radio(
         "후보자를 어떻게 입력할까요?",
@@ -63,3 +66,4 @@ def get_user_input():
     st.write(txt)
 
     return txt
+'''
