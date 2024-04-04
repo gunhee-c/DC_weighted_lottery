@@ -55,7 +55,7 @@ def unit_userinput_widget(key, i, names, check_user_exists, check_user_list, ass
             format="%d",
             key=f'{key}_score_{i}{addme}'  # Unique key for each score input
         )
-    if assigned_user == False:
+    if assigned_user == None:
         if name in names:
             st.error(f"닉네임/이름 {name}: 중복된 데이터가 있습니다.")
             st.stop()
@@ -76,14 +76,20 @@ def get_user_input(key, check_user_exists = False, check_user_list = None):
 
 def get_event_input(key, check_user_exists, check_user_list):
     num_events = st.number_input("이벤트 수를 입력하세요", value=1, step=1, min_value=0, key=f'{key}_num_candidates', format="%d")        
-    event_names = []
+    event_candidate_names = []
     event_scores = []
+    event_prize = []
+    event_prize_count = []
+    event_formula = []
+    st.write("---")
+
     for i in range(num_events):
         event_name, event_score = get_event_input_radio(key+str(i), check_user_exists, check_user_list)
-        event_names.append(event_name)
+        event_candidate_names.append(event_name)
         event_scores.append(event_score)
-    return event_names, event_scores
-
+        st.write("---")
+    return event_candidate_names, event_scores
+    
 def get_event_input_radio(key, check_user_exists, check_user_list):
 
     pickme = st.radio(
