@@ -92,9 +92,9 @@ def get_event_input_radio(key, check_user_exists, check_user_list):
         horizontal=True
     )
     if pickme == "Yes":
-        event_name, event_score = userinput_widget(key, check_user_exists, check_user_list, assigned_users=check_user_list)
+        event_name, event_score = userinput_widget(key+"Yes", check_user_exists, check_user_list, assigned_users=check_user_list)
     if pickme == "No":    
-        event_name, event_score = userinput_widget(key, check_user_exists, check_user_list)
+        event_name, event_score = userinput_widget(key+"No", check_user_exists, check_user_list)
 
     return event_name, event_score
 
