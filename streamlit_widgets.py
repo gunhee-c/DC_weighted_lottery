@@ -4,7 +4,17 @@ import Streamlit_Utils as su
 r = su.script_text_loader('streamlit_script.txt')
 r_load = su.parse_loaded_script(r)
 
-def create_widget_set():
+def userinput_widget():
+    num_candidates = st.number_input("후보자 수를 입력하세요", value=1, step=1, min_value=0, format="%d")        
+    names = []
+    scores = []
+    for _ in range(num_candidates):
+        name, score = unit_userinput_widget()
+        names.append(name)
+        scores.append(score)
+    print(names, scores)
+    return names, scores
+def unit_userinput_widget():
     # Create a row of 2 columns
     col1, col2 = st.columns(2)
     
@@ -13,7 +23,7 @@ def create_widget_set():
             "이름/닉네임을 입력하세요",
             placeholder="This is a placeholder"
         )
-    
+
     with col2:  # Use the second column for the score input
         score = st.number_input("점수를 입력하세요", value=1, step=1, min_value=0, format="%d")
     
