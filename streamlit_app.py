@@ -23,10 +23,22 @@ with tab1:
     st.write(candidates_info)
 with tab2:
     su.script_text_writer(r_load, 'tab2_info')
+    event_name_list,event_data_list, event_prize_list, event_prize_count_list, event_formula_list, event_var_list = \
     sw.get_event_input(key= "tab2", check_user_exists=True, check_user_list = candidates_info, var_name = var_name)
+    st.write("---")
 
 with tab3:
     su.script_text_writer(r_load, 'tab3_info')
+    st.write("이벤트 정보: ")
+    for i in range(len(event_name_list)):
+        st.write(f"이벤트 {i+1} 정보")
+        st.write(event_name_list[i])
+        st.write(event_data_list[i])
+        st.write(event_prize_list[i])
+        st.write(event_prize_count_list[i])
+        st.write(event_formula_list[i])
+        st.write(event_var_list[i])
+        st.write("---")
 
 with tab4:
     su.script_text_writer(r_load, 'tab4_info')
