@@ -69,7 +69,7 @@ def get_event_input(key, check_user_exists, check_user_list):
     event_names = []
     event_scores = []
     for i in range(num_events):
-        event_name, event_score = get_event_input_radio(key+i, check_user_exists, check_user_list)
+        event_name, event_score = get_event_input_radio(key+str(i), check_user_exists, check_user_list)
         event_names.append(event_name)
         event_scores.append(event_score)
     return event_names, event_scores
