@@ -21,12 +21,24 @@ if option_choice == "후보자 정보 입력":
     su.script_text_writer(r_load, 'tab1_info')
     candidates_info, var_name = sw.get_user_input(key = "tab1")
     st.write("Candidates and their scores:")
-    st.write(candidates_info)
-    
+
+    st.session_state.candidates_info = candidates_info
+    st.session_state.var_name = var_name
+    st.write(st.session_state.candidates_info)   
+
+     
 if option_choice == "추첨 정보":
     su.script_text_writer(r_load, 'tab2_info')
     event_name_list,event_data_list, event_prize_list, event_prize_count_list, event_formula_list, event_var_list = \
-    sw.get_event_input(key= "tab2", check_user_exists=True, check_user_list = candidates_info, var_name = var_name)
+    sw.get_event_input(key="tab2", check_user_exists=True, check_user_list=st.session_state.candidates_info, var_name=st.session_state.var_name)
+    
+    st.session_state.event_name_list = event_name_list
+    st.session_state.event_data_list = event_data_list
+    st.session_state.event_prize_list = event_prize_list
+    st.session_state.event_prize_count_list = event_prize_count_list
+    st.session_state.event_formula_list = event_formula_list
+    st.session_state.event_var_list = event_var_list
+
     st.write("---")
 
 if option_choice == "추첨 진행":
