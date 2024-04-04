@@ -83,7 +83,7 @@ def get_user_input(key, check_user_exists = False, check_user_list = None, max_u
     return user_input_dict, var_name
 
 def get_event_input(key, check_user_exists, check_user_list, var_name):
-    num_events = st.number_input("이벤트 수를 입력하세요", value=1, step=1, min_value=0, key=f'{key}_num_candidates', format="%d")        
+    num_events = st.number_input("이벤트 수를 입력하세요", value=1, step=1, min_value=1, max_value = 5, key=f'{key}_num_candidates', format="%d")        
     event_name_list = []
     event_data_list = []
     event_prize_list = []
@@ -91,23 +91,30 @@ def get_event_input(key, check_user_exists, check_user_list, var_name):
     event_formula_list = []
     event_var_list = []
     st.write("---")
-
+    event_tabs = []
+    event_divisions = []
     for i in range(num_events):
-        st.header(f"이벤트 {i+1}: ")
-        event_name = st.checkbox("이벤트 명 입력", key=f'{key}_event_check_{i}')
-        if event_name:
-            get_event_name = st.text_input("이벤트 명을 입력하세요", key=f'{key}_event_name_{i}')
-        event_data, event_prize, event_prize_count, event_formula, event_var  = get_event_input_radio(key+str(i), check_user_exists, check_user_list, var_name)
-        if event_name:
-            event_name_list.append(get_event_name)
-        else: 
-            event_name_list.append(event_prize)
-        event_data_list.append(event_data)
-        event_prize_list.append(event_prize)
-        event_prize_count_list.append(event_prize_count)
-        event_formula_list.append(event_formula)
-        event_var_list.append(event_var)
-        st.write("---")
+        event_tabs.append(f"이벤트 {i+1}")
+        event_divisions.append(f"event{i+1}")
+    event_division = st.tabs(event_tabs)
+    for i in range(num_events):
+        with event_division[i]:
+            st.header(f"이벤트 {i+1}: ")
+            event_name = st.checkbox("이벤트 명 입력", key=f'{key}_event_check_{i}')
+            if event_name:
+                get_event_name = st.text_input("이벤트 명을 입력하세요", key=f'{key}_event_name_{i}')
+            
+            event_data, event_prize, event_prize_count, event_formula, event_var  = get_event_input_radio(key+str(i), check_user_exists, check_user_list, var_name)
+            if event_name:
+                event_name_list.append(get_event_name)
+            else: 
+                event_name_list.append(event_prize)
+            event_data_list.append(event_data)
+            event_prize_list.append(event_prize)
+            event_prize_count_list.append(event_prize_count)
+            event_formula_list.append(event_formula)
+            event_var_list.append(event_var)
+            st.write("---")
     return event_name_list, event_data_list, event_prize_list, event_prize_count_list, event_formula_list, event_var_list
     
 def get_event_input_radio(key, check_user_exists, check_user_list, var_name):
