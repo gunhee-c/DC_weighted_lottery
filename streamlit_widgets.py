@@ -5,14 +5,19 @@ r = su.script_text_loader('streamlit_script.txt')
 r_load = su.parse_loaded_script(r)
 
 def create_widget_set():
-    name = st.text_input(
-        "이름/닉네임을 입력하세요",
-        placeholder = "This is a placeholder"
-        #key="placeholder",
-    )
-    score = st.number_input("점수를 입력하세요", value=1, placeholder="미입력: 1", step = 1, min_value = 0)
-    return [name,score]
-
+    # Create a row of 2 columns
+    col1, col2 = st.columns(2)
+    
+    with col1:  # Use the first column for the name input
+        name = st.text_input(
+            "이름/닉네임을 입력하세요",
+            placeholder="This is a placeholder"
+        )
+    
+    with col2:  # Use the second column for the score input
+        score = st.number_input("점수를 입력하세요", value=1, step=1, min_value=0, format="%d")
+    
+    return [name, score]
 
 def tokenize_text(text):
     return text.split("\n")
