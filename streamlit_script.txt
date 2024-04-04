@@ -29,7 +29,6 @@
 %END%
 
 %Script% user_input
-textbox를 통해 입력하는 방식은 다음과 같습니다
 @예시1:   @예시2
 기뭇디    기뭇디
 1

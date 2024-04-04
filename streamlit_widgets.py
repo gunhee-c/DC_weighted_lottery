@@ -15,14 +15,15 @@ def get_user_input():
         horizontal=True
     )
     if pickme == "Textbox":
-        su.script_text_writer(r_load, 'user_input')
+        with st.expander("Textbox를 통해 입력하는 방식은 다음과 같습니다"):
+            su.script_text_writer(r_load, 'user_input')
         
-        txt = st.text_area()
+        txt = st.text_area("write here")
         
     else:
         st.write("GUI로 입력하세요")
     st.write('---')
     st.write("입력한 후보자 정보: ")
     st.write(txt)
-    
+
     return txt
