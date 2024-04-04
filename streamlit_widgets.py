@@ -4,26 +4,32 @@ import Streamlit_Utils as su
 r = su.script_text_loader('streamlit_script.txt')
 r_load = su.parse_loaded_script(r)
 
-def userinput_widget(key, check_user_exists, check_user_list):
+def userinput_widget(key, check_user_exists, check_user_list, assigned_users = None):
     num_candidates = st.number_input("후보자 수를 입력하세요", value=1, step=1, min_value=0, key=f'{key}_num_candidates', format="%d")        
     names = []
     scores = []
     for i in range(num_candidates):
-        name, score = unit_userinput_widget(key, i,names, check_user_exists, check_user_list)
+        if assigned_users:
+            name, score = unit_userinput_widget(key, i,names, check_user_exists, check_user_list, assigned_users[i])
+        else:
+            name, score = unit_userinput_widget(key, i,names, check_user_exists, check_user_list)
         names.append(name)
         scores.append(score)
     st.write("Candidates and their scores:")
     st.write(dict(zip(names, scores)))
     return names, scores
 
-def unit_userinput_widget(key, i, names, check_user_exists, check_user_list):
+def unit_userinput_widget(key, i, names, check_user_exists, check_user_list, assigned_user = None):
     # Create a row of 2 columns
     col1, col2 = st.columns(2)
-    
+    if assigned_user:
+        placeholder_name = assigned_user
+    else:
+        placeholder_name = "This is a placeholder"
     with col1:  # Use the first column for the name input
         name = st.text_input(
             "이름/닉네임을 입력하세요",
-            placeholder="This is a placeholder",
+            placeholder=placeholder_name,
             key=f'{key}_name_{i}'  # Unique key for each name input
         )
 
@@ -38,11 +44,11 @@ def unit_userinput_widget(key, i, names, check_user_exists, check_user_list):
         )
 
     if name in names:
-        st.error(f"닉네임/이름 {name}이 이미 있습니다.")
+        st.error(f"닉네임/이름 {name}: 중복된 데이터가 있습니다.")
         st.stop()
     if check_user_exists:
         if name not in check_user_list:
-            st.error(f"닉네임/이름 {name}이 참가자 명단에 없습니다.")
+            st.error(f"닉네임/이름 {name}: 참가자 명단에 없습니다.")
             st.stop()
     return [name, score]
 
@@ -51,7 +57,34 @@ def tokenize_text(text):
 
 def get_user_input(key, check_user_exists = False, check_user_list = None):
     names, scores = userinput_widget(key, check_user_exists, check_user_list)
+    st.write("마지막으로..")
+    st.text_input("변수명을 입력하세요", key=f'{key}_variable_name')
     return names, scores
+
+def get_event_input(key, check_user_exists, check_user_list):
+    num_events = st.number_input("이벤트 수를 입력하세요", value=1, step=1, min_value=0, key=f'{key}_num_candidates', format="%d")        
+    event_names = []
+    event_scores = []
+    for i in range(num_events):
+        event_name, event_score = get_event_input_radio(key+i, check_user_exists, check_user_list)
+        event_names.append(event_name)
+        event_scores.append(event_score)
+    return event_names, event_scores
+
+def get_event_input_radio(key, check_user_exists, check_user_list):
+
+    pickme = st.radio(
+        "해당 이벤트 후보자 = 전체 후보자인가요?",
+        ["Yes", "No"],
+        horizontal=True
+    )
+    if pickme == "Yes":
+        pass
+    if pickme == "No":    
+        event_name, event_score = userinput_widget(key, check_user_exists, check_user_list)
+
+    return event_name, event_score
+
 '''
 def get_user_input():    
     pickme = st.radio(
