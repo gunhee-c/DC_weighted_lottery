@@ -4,19 +4,19 @@ import Streamlit_Utils as su
 r = su.script_text_loader('streamlit_script.txt')
 r_load = su.parse_loaded_script(r)
 
-def userinput_widget(key):
+def userinput_widget(key, check_user_exists, check_user_list):
     num_candidates = st.number_input("후보자 수를 입력하세요", value=1, step=1, min_value=0, key=f'{key}_num_candidates', format="%d")        
     names = []
     scores = []
     for i in range(num_candidates):
-        name, score = unit_userinput_widget(key, i)
+        name, score = unit_userinput_widget(key, i,names, check_user_exists, check_user_list)
         names.append(name)
         scores.append(score)
     st.write("Candidates and their scores:")
     st.write(dict(zip(names, scores)))
     return names, scores
 
-def unit_userinput_widget(key, i):
+def unit_userinput_widget(key, i, names, check_user_exists, check_user_list):
     # Create a row of 2 columns
     col1, col2 = st.columns(2)
     
@@ -36,14 +36,22 @@ def unit_userinput_widget(key, i):
             format="%d",
             key=f'{key}_score_{i}'  # Unique key for each score input
         )
-    
+
+    if name in names:
+        st.error(f"닉네임/이름 {name}이 이미 있습니다.")
+        st.stop()
+    if check_user_exists:
+        if name not in check_user_list:
+            st.error(f"닉네임/이름 {name}이 참가자 명단에 없습니다.")
+            st.stop()
     return [name, score]
 
 def tokenize_text(text):
     return text.split("\n")
 
-def get_user_input():
-    names, scores = userinput_widget("user_input")
+def get_user_input(check_user_exists = False, check_user_list = None):
+    names, scores = userinput_widget("user_input", check_user_exists, check_user_list)
+    return names, scores
 '''
 def get_user_input():    
     pickme = st.radio(
