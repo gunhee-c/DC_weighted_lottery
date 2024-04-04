@@ -79,25 +79,36 @@ def unit_userinput_widget(key, i, names, check_user_exists, check_user_list, ass
 def get_user_input(key, check_user_exists = False, check_user_list = None, max_users = None):
     user_input_dict = userinput_widget(key, check_user_exists, check_user_list, max_users)
     st.write("마지막으로..")
-    st.text_input("변수명을 입력하세요", key=f'{key}_variable_name')
-    return user_input_dict
+    var_name = st.text_input("변수명을 입력하세요", key=f'{key}_variable_name')
+    return user_input_dict, var_name
 
-def get_event_input(key, check_user_exists, check_user_list):
+def get_event_input(key, check_user_exists, check_user_list, var_name):
     num_events = st.number_input("이벤트 수를 입력하세요", value=1, step=1, min_value=0, key=f'{key}_num_candidates', format="%d")        
     event_data_list = []
-    event_prize = []
-    event_prize_count = []
-    event_formula = []
+    event_prize_list = []
+    event_prize_count_list = []
+    event_formula_list = []
+    event_var_list = []
     st.write("---")
 
     for i in range(num_events):
-
-        event_data = get_event_input_radio(key+str(i), check_user_exists, check_user_list)
+        event_data, event_prize, event_prize_count, event_formula, event_var  = get_event_input_radio(key+str(i), check_user_exists, check_user_list, var_name)
         event_data_list.append(event_data)
+        event_prize_list.append(event_prize)
+        event_prize_count_list.append(event_prize_count)
+        event_formula_list.append(event_formula)
+        event_var_list.append(event_var)
         st.write("---")
-    return event_data_list
+    return event_data_list, event_prize_list, event_prize_count_list, event_formula_list, event_var_list
     
-def get_event_input_radio(key, check_user_exists, check_user_list):
+def get_event_input_radio(key, check_user_exists, check_user_list, var_name):
+    event_prize = st.text_input("이벤트 상품 명을 입력하세요", key=f'{key}_prize')
+    event_prize_count = st.number_input("이벤트 상품 수를 입력하세요", value=1, step=1, min_value=0, key=f'{key}_prize_count', format="%d")
+    st.markdown(":gray[참가자 변수명은 ''으로 설정되어 있습니다.]")
+    event_var = st.text_input("이벤트 변수명을 입력하세요", key=f'{key}_variable_name')
+    event_formula = st.text_input("이벤트 가중치 계산식을 입력하세요", key=f'{key}_formula')
+    with st.expander("도움말을 확인하세요"):
+        event_formula_info(var_name, event_var)
 
     pickme = st.radio(
         key = key,
@@ -113,7 +124,17 @@ def get_event_input_radio(key, check_user_exists, check_user_list):
         event_data = userinput_widget(key+"No", check_user_exists, check_user_list, max_users = len(check_user_list))
     st.write("이벤트 후보자 정보: ")
     st.write(event_data)
-    return event_data
+    return event_data, event_prize, event_prize_count, event_formula, event_var
+
+def event_formula_info(var1, var2):
+    st.write(f"가중치 계산식 예시: {var1} + {var2}")
+    st.write(f"기본적 연산 기호: + * / - ^")
+    st.write(f"변수명은 영문으로 설정하세요")
+    st.write(f"min, max, abs, sqrt 등의 함수를 사용할 수 있습니다.")
+    st.write(f"예시: max({var1}, {var2})")
+    st.write(f"계산이 되지 않는 식의 경우 0으로 처리됩니다.")
+    st.write("반드시 수식이 옳은지 확인하시고 추첨하세요!")
+    return None
 
 '''
 def get_user_input():    

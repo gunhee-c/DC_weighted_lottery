@@ -18,12 +18,12 @@ tab1, tab2, tab3, tab4 = st.tabs(['후보자 정보 입력', '추첨 정보', '�
 
 with tab1:
     su.script_text_writer(r_load, 'tab1_info')
-    candidates_info = sw.get_user_input(key = "tab1")
+    candidates_info, var_name = sw.get_user_input(key = "tab1")
     st.write("Candidates and their scores:")
     st.write(candidates_info)
 with tab2:
     su.script_text_writer(r_load, 'tab2_info')
-    sw.get_event_input(key= "tab2", check_user_exists=True, check_user_list = candidates_info)
+    sw.get_event_input(key= "tab2", check_user_exists=True, check_user_list = candidates_info, var_name = var_name)
 
 with tab3:
     su.script_text_writer(r_load, 'tab3_info')
