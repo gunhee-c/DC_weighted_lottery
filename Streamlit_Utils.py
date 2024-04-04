@@ -26,7 +26,7 @@ def parse_loaded_script(script_text):
             script_tokens.append(lines)
         
         if lines.startswith("%Script"):
-            variable_name = lines[9:]
+            variable_name = lines[10:]
             flag = True
     return scripts
 r = script_text_loader('streamlit_script.txt')
