@@ -31,11 +31,10 @@ with tab3:
     su.script_text_writer(r_load, 'tab3_info')
     st.write("이벤트 정보: ")
     for i in range(len(event_name_list)):
-        st.write(f"이벤트 {i+1}:" + " " + event_name_list[i])
-        st.write("참가자 정보: ")
-        st.write(event_data_list[i])
-        st.write("상품: " + event_prize_list[i] + " 수량: " + str(event_prize_count_list[i]), "계산식: " + event_formula_list[i])
-        st.write("---")
+        with st.expander(f"이벤트 {i+1}:" + " " + event_name_list[i]):
+            st.write("상품: " + event_prize_list[i] + " 수량: " + str(event_prize_count_list[i]), "계산식: " + event_formula_list[i])       
+            st.write("참가자 정보: ")
+            st.write(event_data_list[i])
 
 with tab4:
     su.script_text_writer(r_load, 'tab4_info')
