@@ -13,16 +13,20 @@ def userinput_widget(key, check_user_exists, check_user_list, assign_users = Fal
     if assign_users:
         st.write("number of assigned users: ", len(check_user_list))
         num_candidates = len(check_user_list)
+        var = str(num_candidates) + key
+        st.session_state[var] = num_candidates
     else:
         num_candidates = st.number_input("후보자 수를 입력하세요", value=1, step=1, min_value=0, key=f'{key}_num_candidates', format="%d")        
+        var = str(num_candidates) + key
+        st.session_state[var] = num_candidates
         if max_users:
-            if num_candidates > max_users:
+            if st.session_state[var] > max_users:
                 st.error(f"후보자 수는 {max_users}명 이하로 입력하세요.")
                 st.stop()
     names = []
     scores = []
 
-    for i in range(num_candidates):
+    for i in range(st.session_state[var]):
         if assign_users:
             name, score = unit_userinput_widget(key, i,names, check_user_exists, user_list, user_list[i])
         else:
@@ -43,28 +47,32 @@ def unit_userinput_widget(key, i, names, check_user_exists, check_user_list, ass
         placeholder_name = "This is a placeholder"
     with col1:  # Use the first column for the name input
         if assigned_user:
-            name = st.text_input(
+            st_key = f'{key}_name_{i}{addme}'
+            st.session_state[st_key] = st.text_input(
                 "이름/닉네임을 입력하세요",
                 value=placeholder_name,
-                key=f'{key}_name_{i}{addme}'  # Unique key for each name input
+                key= st_key  # Unique key for each name input
             )
         else:
-            name = st.text_input(
+            st_key = key=f'{key}_name_{i}{addme}'
+            st.session_state[st_key] = st.text_input(
                 "이름/닉네임을 입력하세요",
                 placeholder=placeholder_name,
-                key=f'{key}_name_{i}{addme}'  # Unique key for each name input
+                key= st_key  # Unique key for each name input
             )
 
     with col2:  # Use the second column for the score input
-        score = st.number_input(
+        st_key = f'{key}_score_{i}{addme}'
+        st.session_state[st_key] = st.number_input(
             "점수를 입력하세요", 
             value=1, 
             step=1, 
             min_value=0, 
             format="%d",
-            key=f'{key}_score_{i}{addme}'  # Unique key for each score input
+            key= st_key  # Unique key for each score input
         )
     if assigned_user == None:
+        name = st.session_state[f'{key}_name_{i}{addme}']
         if name in names:
             if name != "":
                st.error(f"닉네임/이름 {name}: 중복된 데이터가 있습니다.")
@@ -74,6 +82,7 @@ def unit_userinput_widget(key, i, names, check_user_exists, check_user_list, ass
                 if name != "":
                     st.error(f"닉네임/이름 {name}: 참가자 명단에 없습니다.")
                 #st.stop()
+    score = st.session_state[f'{key}_score_{i}{addme}']
     return [name, score]
 
 def get_user_input(key, check_user_exists = False, check_user_list = None, max_users = None):
