@@ -27,21 +27,21 @@ def userinput_widget(key, num_candidates, candidate_dict = None, is_assigned = F
         user_list = list(candidate_dict.keys())
     except:
         user_list = []
-
+    current_user_list = []
     user_info = {}
 
     for i in range(num_candidates):
         if is_assigned:
-            name, score = unit_userinput_widget(key, i, user_list, user_list[i])
+            name, score = unit_userinput_widget(key, i, user_list, current_user_list, user_list[i])
         else:
-            name, score = unit_userinput_widget(key, i, user_list)
+            name, score = unit_userinput_widget(key, i, user_list, current_user_list)
         user_info[name] = score
-
+        current_user_list.append(name)
     return user_info
 
 
 
-def unit_userinput_widget(key, i, user_list, assigned_user = None):
+def unit_userinput_widget(key, i, user_list, current_user_list, assigned_user = None):
     # Create a row of 2 columns
     col1, col2 = st.columns(2)
     addme = ""
@@ -58,7 +58,6 @@ def unit_userinput_widget(key, i, user_list, assigned_user = None):
         score = create_widget_score(key, i, addme)
 
     check_user_input(name, user_list, current_user_list, assigned_user)
-    current_user_list.append(name)
 
     return [name, score]
 
