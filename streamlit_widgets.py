@@ -37,7 +37,7 @@ def make_state_list(state, num_candidates):
             state_names.append("")
             state_scores.append(2147483647)
     return state_names, state_scores
-
+#userinput_widget(키, 참여자 수, 참여자 정보, 토탈 유저 명단, 지정했는지 여부)
 def userinput_widget(key, num_candidates, state, candidate_dict = None, is_assigned = False):
     try:
         user_list = list(candidate_dict.keys())
@@ -143,8 +143,8 @@ def check_user_input(name, user_list, current_user_list, assigned_user):
                     st.error(f"닉네임/이름 {name}: 참가자 명단에 없습니다.")
                     #st.stop()
 
-def get_user_input(key, num_candidates, num_state, var_state, candidate_dict = None, max_users = None):
-    user_input_dict = userinput_widget(key, num_candidates, num_state, candidate_dict, max_users)
+def get_user_input(key, num_candidates, num_state, var_state, candidate_dict = None, is_assigned = False):
+    user_input_dict = userinput_widget(key, num_candidates, num_state, candidate_dict, is_assigned)
     st.write("마지막으로..")
     var_name = st.text_input("변수명을 입력하세요", value = var_state, key=f'{key}_variable_name')
     return user_input_dict, var_name
@@ -162,6 +162,7 @@ def buffer_event_state(event_state, num_events):
         event_state[3].append(1)
         event_state[4].append("")
         event_state[5].append("")   
+        event_state[6].append(0)
     return event_state
 
 def get_event_input(key, num_events, users_dict, var_name, event_state):
@@ -169,6 +170,7 @@ def get_event_input(key, num_events, users_dict, var_name, event_state):
     #[event_name_list, event_data_list, event_prize_list, 
     #event_prize_count_list, event_formula_list, event_var_list]
     event_state_mod = buffer_event_state(event_state, num_events)
+
     event_name_list, event_data_list, event_prize_list, event_prize_count_list, \
     event_formula_list, event_var_list, event_tabs, event_divisions = ([] for _ in range(8))
     
@@ -189,7 +191,7 @@ def get_event_input(key, num_events, users_dict, var_name, event_state):
             
             event_prize, event_prize_count, event_formula, event_var\
                     = get_event_info(key+str(i), var_name, event_state_mod, i)
-            event_data = get_event_input_radio(key+str(i), users_dict, event_state_mod[1][i])
+            event_data = get_event_input_radio(key+str(i), event_state_mod[6][i], event_state_mod[1][i], users_dict)
 
             event_prize_list.append(event_prize)
             event_prize_count_list.append(event_prize_count)
@@ -222,7 +224,9 @@ def get_event_info(key, var_name, event_state_mod, i):
         event_formula_info(var_name, event_var)
     return event_prize, event_prize_count, event_formula, event_var
 
-def get_event_input_radio(key, user_dict, state_dict):
+def get_event_input_radio(key, num_participants, states, user_dict):
+    #userinput_widget(키, 참여자 수, 참여자 정보, 토탈 유저 명단, 지정했는지 여부)
+        #user_input_dict = userinput_widget(key, num_candidates, num_state, candidate_dict, max_users)
     pickme = st.radio(
         key = key,
         label= "해당 이벤트 후보자 = 전체 후보자인가요?",
@@ -230,12 +234,18 @@ def get_event_input_radio(key, user_dict, state_dict):
         horizontal=True
     )
     if pickme == "Yes":
-        event_data = userinput_widget(key+"Yes", user_dict, state_dict, is_assigned = True)
-    if pickme == "No":  
+        num_candidates = len(user_dict)
+        event_data = userinput_widget(key+"Yes", num_candidates, states, user_dict, is_assigned = True)
+    if pickme == "No":
+        num_candidates = st.number_input("이벤트 후보자 수를 입력하세요", value=num_participants, step=1, min_value=1, key=f'{key}_num_candidates', format="%d")
+        if num_candidates > len(user_dict):
+            st.error("전체 후보자 수보다 많은 수를 입력할 수 없습니다.")
+            st.stop()
+        
         st.markdown(":gray[주의: No를 누른 뒤 Yes를 누르면 데이터가 초기화됩니다.]")
         st.write("참가자 명단을 확인하세요")
         st.write(user_dict)  
-        event_data = userinput_widget(key+"No", user_dict, state_dict, max_users = len(user_dict))
+        event_data = userinput_widget(key+"No", num_candidates, states, user_dict)
     st.write("이벤트 후보자 정보: ")
     st.write(event_data)
     return event_data

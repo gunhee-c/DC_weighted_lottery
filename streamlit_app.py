@@ -22,7 +22,8 @@ if 'current_page' not in st.session_state:
     st.session_state.event_prize_list, \
     st.session_state.event_prize_count_list, \
     st.session_state.event_formula_list, \
-    st.session_state.event_var_list = [], [], [], [], [], []
+    st.session_state.event_var_list, \
+    st.session_state.event_user_count = [], [], [], [], [], [], []
 
 
 #tab1, tab2, tab3, tab4 = st.sidebar(['후보자 정보 입력', '추첨 정보', '추첨 진행', '결과 확인'])
@@ -60,7 +61,8 @@ if option_choice == "추첨 정보":
                             st.session_state.event_prize_list, \
                                 st.session_state.event_prize_count_list, \
                                     st.session_state.event_formula_list, \
-                                        st.session_state.event_var_list]
+                                        st.session_state.event_var_list, \
+                                            st.session_state.event_user_count]
     
     event_name_list,event_data_list, event_prize_list, event_prize_count_list, event_formula_list, event_var_list = \
     sw.get_event_input(key="tab2", num_events = st.session_state["event_count"], \
