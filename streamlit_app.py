@@ -66,9 +66,11 @@ def buffer_event_state(event_state_pack, num_events):
 def construct_event_tabs(num_events):
     for i in range(num_events):
         event_tabs = []
+        event_tab_name = []
         event_tabs.append(f"이벤트 {i+1}")
-    event_tabs = st.tabs(event_tabs)
-    return event_tabs
+        event_tab_name.append(f"이벤트 {i+1}")
+    event_tab_name = st.tabs(event_tabs)
+    return event_tab_name
 
 def get_event_name(i):
     st.header(f"이벤트 {i+1}: ")
