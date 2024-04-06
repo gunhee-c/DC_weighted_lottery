@@ -192,7 +192,10 @@ def get_event_information(key, num_events, total_candidate_dict, total_candidate
             
             event_prize, event_prize_count, event_formula, event_var\
                     = get_event_info(key+str(i), total_candidate_var_name, total_event_states, i)
-
+            st.write("total event state 6 1")
+            st.write(total_event_states[6][i])
+            st.write(total_event_states[1][i])
+            st.write(total_candidate_dict)
             event_data, event_participant_count = \
                 get_event_input_radio(key+str(i), total_event_states[6][i], total_event_states[1][i], total_candidate_dict)
             
