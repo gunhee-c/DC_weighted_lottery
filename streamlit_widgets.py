@@ -208,7 +208,7 @@ def get_event_info(key, var_name, event_state_mod, i):
         event_prize_count = st.number_input("상품 수:", value= event_state_mod[3][i], step=1, min_value=0, key=f'{key}_prize_count', format="%d")
     with col3:
         event_var = st.text_input("이벤트 변수명:", value = event_state_mod[5][i], key=f'{key}_variable_name')
-    event_formula = st.text_input("이벤트 가중치 계산식을 입력하세요", value = event_state_mod[4][i] key=f'{key}_formula')
+    event_formula = st.text_input("이벤트 가중치 계산식을 입력하세요", value = event_state_mod[4][i], key=f'{key}_formula')
     with st.expander("도움말을 확인하세요"):
         event_formula_info(var_name, event_var)
     return event_prize, event_prize_count, event_formula, event_var
