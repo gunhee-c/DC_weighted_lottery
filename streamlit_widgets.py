@@ -22,6 +22,16 @@ def get_user_count(key, state, user_list = [], is_assigned = False, max_users = 
 #유저 정보의 리스트를 입력받아 반환하는 함수
 #candidate_dict: 유저 명단이 이미 확보되어 있는 경우
 #is_assigned: 유저 정보가 이미 할당되어 있는 경우
+
+def make_state_list(state, num_candidates):
+    state_names = list(state.keys())
+    state_scores = list(state.values())
+    if len(state_names) < num_candidates:
+        for i in range(num_candidates - len(state_names)):
+            state_names.append("")
+            state_scores.append(-1)
+    return state_names, state_scores
+
 def userinput_widget(key, num_candidates, state, candidate_dict = None, is_assigned = False):
     try:
         user_list = list(candidate_dict.keys())
@@ -29,8 +39,7 @@ def userinput_widget(key, num_candidates, state, candidate_dict = None, is_assig
         user_list = []
     current_user_list = []
     user_info = {}
-    state_names = list(state.keys())
-    state_scores = list(state.values())
+    state_names, state_scores = make_state_list(state, num_candidates)
     for i in range(num_candidates):
         if is_assigned:
             name, score = unit_userinput_widget(key, i, state_names[i], state_scores[i], user_list, current_user_list, user_list[i])
@@ -52,8 +61,12 @@ def unit_userinput_widget(key, i, state_name, state_score, user_list, current_us
         addme = "(Assigned)"
     else:
         placeholder_name = "This is a placeholder"
+    is_assigned = False
+    if assigned_user:
+        is_assigned = True
+
     with col1:  # Use the first column for the name input
-        name = create_widget_name(key, i, addme, state_name, placeholder_name, assigned_user)
+        name = create_widget_name(key, i, addme, state_name, placeholder_name, is_assigned)
         
     with col2:  # Use the second column for the score input
         score = create_widget_score(key, i, addme, state_score)
@@ -62,8 +75,9 @@ def unit_userinput_widget(key, i, state_name, state_score, user_list, current_us
 
     return [name, score]
 
-def create_widget_name(key, index, addme, state_name, placeholder_name, assigned_user = False):
-    if assigned_user:
+def create_widget_name(key, index, addme, state_name, placeholder_name, is_assigned = False):
+  # If no name is provided, use the placeholder
+    if is_assigned:
         st_key = f'{key}_name_{index}{addme}'
         name = st.text_input(
             "이름/닉네임을 입력하세요",
@@ -71,13 +85,22 @@ def create_widget_name(key, index, addme, state_name, placeholder_name, assigned
             key= st_key  # Unique key for each name input
         )
     else:
-        st_key = key=f'{key}_name_{index}{addme}'
-        name = st.text_input(
-            "이름/닉네임을 입력하세요",
-            value=state_name,
-            placeholder=placeholder_name,
-            key= st_key  # Unique key for each name input
-        )
+        if state_name == "":
+            st_key = key=f'{key}_name_{index}{addme}'
+            name = st.text_input(
+                "이름/닉네임을 입력하세요",
+                value=state_name,
+                placeholder=placeholder_name,
+                key= st_key  # Unique key for each name input
+            )
+        else:
+            st_key = key=f'{key}_name_{index}{addme}'
+            name = st.text_input(
+                "이름/닉네임을 입력하세요",
+                value=state_name,
+                placeholder=placeholder_name,
+                key= st_key  # Unique key for each name input
+            )
     return name
 
 def create_widget_score(key, i, addme, state_score):
