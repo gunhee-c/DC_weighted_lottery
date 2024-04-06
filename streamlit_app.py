@@ -37,9 +37,10 @@ if option_choice == "페이지 소개":
 
 if option_choice == "후보자 정보 입력":
     su.script_text_writer(r_load, 'tab1_info')
-
+    
     num_candidates = sw.get_user_count(key="tab1")
-    st.session_state["candidate_count"] = num_candidates
+    if st.session_state['candidate_count'] == 0 or st.session_state['candidate_count'] != num_candidates:
+        st.session_state["candidate_count"] = num_candidates
 
     candidates_dict, candidates_var =sw.get_user_input(key="tab1", num_candidates=num_candidates)
 
