@@ -12,11 +12,11 @@ def parse_loaded_script(script_text):
     variable_name = ""
     for lines in script_text:
         lines = lines.strip()
-        print(lines)
+        #print(lines)
         if lines == "%END%":
-            print("ending detected")
-            print(variable_name)
-            print(script_tokens)
+            #print("ending detected")
+            #print(variable_name)
+            #print(script_tokens)
             scripts[variable_name] = script_tokens
             flag = False
 
@@ -28,13 +28,13 @@ def parse_loaded_script(script_text):
         
         if lines.startswith("%Script%"):
             variable_name = lines[9:]
-            print("Started reading")
-            print(variable_name)
+            #print("Started reading")
+            #print(variable_name)
             flag = True
     return scripts
 r = script_text_loader('streamlit_script.txt')
 r_load = parse_loaded_script(r)
-print(r_load)
+#print(r_load)
 
 def script_text_writer(script, script_name):
     str_list = script[script_name]

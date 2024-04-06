@@ -144,92 +144,25 @@ def get_total_candidates_info(key, num_candidates, current_num_candidate, curren
     return candidate_info_dict, candidate_var_name
 
 #이벤트 정보를 for문으로 돌릴 수 있도록 동적으로 initialize
-def buffer_event_state(event_state, num_events):
-    if num_events > len(event_state[0]):
-        buffer = num_events - len(event_state[0])
-    else:
-        buffer = 0
-    
-    for _ in range(buffer):
-        event_state[0].append("")
-        event_state[1].append({})
-        event_state[2].append("")
-        event_state[3].append(1)
-        event_state[4].append("")
-        event_state[5].append("")   
-        event_state[6].append(0)
-    return event_state
 
-def construct_event_tabs(num_events):
-    for i in range(num_events):
-        event_tabs = []
-        event_divisions = []
-        event_tabs.append(f"이벤트 {i+1}")
-        event_divisions.append(f"event{i+1}")
-    event_divisions = st.tabs(event_tabs)
-    return event_tabs, event_divisions
 
-def get_event_information(key, num_events, total_candidate_dict, total_candidate_var_name, current_events):
-    #event_state = 
-    #[event_name_list, event_data_list, event_prize_list, 
-    #event_prize_count_list, event_formula_list, event_var_list]
-    total_event_states = buffer_event_state(current_events, num_events)
-
-    event_name_list, event_data_list, event_prize_list, event_prize_count_list, \
-    event_formula_list, event_var_list, event_participant_count_list = ([] for _ in range(7))
-    
-    st.write("---")
-
-    event_tabs, event_division = construct_event_tabs(num_events)
-
-    for i in range(num_events):
-        with event_division[i]:
-            st.header(f"이벤트 {i+1}: ")
-            event_name = st.checkbox("이벤트 명 입력", key=f'{key}_event_checkbox_{i}')
-            if event_name:
-                get_event_name = st.text_input("이벤트 명을 입력하세요", value = total_event_states[0][i], \
-                                               key=f'{key}_event_name_{i}')
-            
-            event_prize, event_prize_count, event_formula, event_var\
-                    = get_event_info(key+str(i), total_candidate_var_name, total_event_states, i)
-            st.write("total event states:")
-            st.write(total_event_states)
-            st.write(total_event_states[1][i])
-            st.write(total_candidate_dict)
-            event_data, event_participant_count = \
-                get_event_input_radio(key+str(i), total_event_states[6][i], total_event_states[1][i], total_candidate_dict)
-            
-            event_prize_list.append(event_prize)
-            event_prize_count_list.append(event_prize_count)
-            event_formula_list.append(event_formula)
-            event_var_list.append(event_var)
-            event_participant_count_list.append(event_participant_count)
-
-            if event_name:
-                event_name_list.append(get_event_name)
-            else: 
-                event_name_list.append(event_prize)
-            event_data_list.append(event_data)
-
-    return event_name_list, event_data_list, event_prize_list, event_prize_count_list, event_formula_list, event_var_list
-
-def get_event_info(key, var_name, event_state_mod, i):
+def get_event_info(key, var_name, event_state, i):
     #event_state = 
     #[event_name_list, event_data_list, event_prize_list, 
     #event_prize_count_list, event_formula_list, event_var_list]
     col1, col2, col3 = st.columns(3)
     with col1:
-        event_prize = st.text_input("상품 명:", value = event_state_mod[2][i], key=f'{key}_prize')
+        event_prize = st.text_input("상품 명:", value = event_state["event_prize_list"][i], key=f'{key}_prize')
     with col2:
-        event_prize_count = st.number_input("상품 수:", value= event_state_mod[3][i], step=1, min_value=0, key=f'{key}_prize_count', format="%d")
+        event_prize_count = st.number_input("상품 수:", value= event_state["event_prize_count_list"][i], step=1, min_value=0, key=f'{key}_prize_count', format="%d")
     with col3:
-        event_var = st.text_input("이벤트 변수명:", value = event_state_mod[5][i], key=f'{key}_variable_name')
-    event_formula = st.text_input("이벤트 가중치 계산식을 입력하세요", value = event_state_mod[4][i], key=f'{key}_formula')
+        event_var = st.text_input("이벤트 변수명:", value = event_state["event_var_list"][i], key=f'{key}_variable_name')
+    event_formula = st.text_input("이벤트 가중치 계산식을 입력하세요", value = event_state["event_formula_list"][i], key=f'{key}_formula')
     with st.expander("수식을 입력하는 방법:"):
         event_formula_info(var_name, event_var)
     return event_prize, event_prize_count, event_formula, event_var
 
-def get_event_input_radio(key, num_participants, states, user_dict):
+def get_event_candidate_info(key, num_participants, states, user_dict):
     #userinput_widget(키, 참여자 수, 참여자 정보, 토탈 유저 명단, 지정했는지 여부)
         #user_input_dict = userinput_widget(key, num_candidates, num_state, candidate_dict, max_users)
     pickme = st.radio(
