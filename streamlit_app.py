@@ -46,7 +46,7 @@ def update_event_states(event_list_dict):
 
 def buffer_event_state(event_state_pack, num_events):
     if num_events > len(event_state_pack["event_name_list"]):
-        buffer = num_events - len(event_state_pack[0])
+        buffer = num_events - len(event_state_pack["event_name_list"])
     else:
         buffer = 0
     for _ in range(buffer):
