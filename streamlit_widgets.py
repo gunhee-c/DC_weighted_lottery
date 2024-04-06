@@ -29,7 +29,7 @@ def make_state_list(state, num_candidates):
     if len(state_names) < num_candidates:
         for i in range(num_candidates - len(state_names)):
             state_names.append("")
-            state_scores.append(-1)
+            state_scores.append(2147483647)
     return state_names, state_scores
 
 def userinput_widget(key, num_candidates, state, candidate_dict = None, is_assigned = False):
