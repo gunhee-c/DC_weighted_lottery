@@ -16,7 +16,7 @@ def get_user_count(key, user_list = [], is_assigned = False, max_users = None):
              if num_candidates > max_users:
                 st.error(f"후보자 수는 {max_users}명 이하로 입력하세요.")
                 st.stop()           
-        num_candidates = st.number_input("후보자 수를 입력하세요", value=1, step=1, min_value=0, key=f'{key}_num_candidates', format="%d")        
+        num_candidates = st.number_input("후보자 수를 입력하세요", value=0, step=1, min_value=0, key=f'{key}_num_candidates', format="%d")        
     return num_candidates
 
 #유저 정보의 리스트를 입력받아 반환하는 함수
