@@ -38,25 +38,22 @@ if option_choice == "페이지 소개":
 if option_choice == "후보자 정보 입력":
     su.script_text_writer(r_load, 'tab1_info')
     
-    num_candidates = sw.get_user_count(key="tab1")
-    
-    # Check if candidate count has changed or if candidates_dict is empty, indicating a need for initialization or update
-    if num_candidates != st.session_state['candidate_count'] or not st.session_state['candidates_dict']:
-        st.session_state["candidate_count"] = num_candidates
-        candidates_dict, candidates_var = sw.get_user_input(key="tab1", num_candidates=num_candidates)
-        st.session_state["candidates_dict"] = candidates_dict
-        st.session_state["candidate_var"] = candidates_var
-    else:
-        # Optionally, use this else block to display existing information without re-fetching input
-        pass
+    num_candidates = sw.get_user_count(key="tab1", state = st.session_state['candidate_count'])
+
+    st.session_state["candidate_count"] = num_candidates
+
+    candidates_dict, candidates_var =sw.get_user_input(key="tab1", num_candidates=num_candidates)
 
     st.write("Candidates and their scores:")
-    st.write(st.session_state["candidates_dict"])
+
+    st.session_state["candidates_dict"] = candidates_dict
+    st.session_state["candidate_var"] = candidates_var
+    st.write(st.session_state["candidates_dict"])   
 
      
 if option_choice == "추첨 정보":
     su.script_text_writer(r_load, 'tab2_info')
-    num_events = st.number_input("이벤트 수를 입력하세요", value=1, step=1, min_value=1, max_value = 5, key=f'num_events', format="%d") 
+    num_events = st.number_input("이벤트 수를 입력하세요", value=st.session_state["event_count"], step=1, min_value=1, max_value = 5, key=f'num_events', format="%d") 
     st.session_state["event_count"] = num_events
 
     event_name_list,event_data_list, event_prize_list, event_prize_count_list, event_formula_list, event_var_list = \

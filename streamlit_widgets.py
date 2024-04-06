@@ -7,7 +7,7 @@ r_load = su.parse_loaded_script(r)
 #유저 수를 입력받아 반환하는 함수
 #이미 유저가 할당되어 있는 경우에는 유저 수를 입력받지 않음 
 #max_users: 유저 수 제한
-def get_user_count(key, user_list = [], is_assigned = False, max_users = None):
+def get_user_count(key, state, user_list = [], is_assigned = False, max_users = None):
     if is_assigned and user_list != []:
         st.write("number of assigned users: ", len(user_list))
         num_candidates = len(user_list)
@@ -16,7 +16,7 @@ def get_user_count(key, user_list = [], is_assigned = False, max_users = None):
              if num_candidates > max_users:
                 st.error(f"후보자 수는 {max_users}명 이하로 입력하세요.")
                 st.stop()           
-        num_candidates = st.number_input("후보자 수를 입력하세요", value=0, step=1, min_value=0, key=f'{key}_num_candidates', format="%d")        
+        num_candidates = st.number_input("후보자 수를 입력하세요", value=state, step=1, min_value=0, key=f'{key}_num_candidates', format="%d")        
     return num_candidates
 
 #유저 정보의 리스트를 입력받아 반환하는 함수
