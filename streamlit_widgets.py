@@ -162,7 +162,7 @@ def get_event_info(key, var_name, event_state, i):
         event_formula_info(var_name, event_var)
     return event_prize, event_prize_count, event_formula, event_var
 
-def get_event_candidate_info(key, num_participants, states, user_dict):
+def get_event_candidate_info(key, num_participants, states, total_users_dict):
     #userinput_widget(키, 참여자 수, 참여자 정보, 토탈 유저 명단, 지정했는지 여부)
         #user_input_dict = userinput_widget(key, num_candidates, num_state, candidate_dict, max_users)
     pickme = st.radio(
@@ -171,22 +171,25 @@ def get_event_candidate_info(key, num_participants, states, user_dict):
         options = ["Yes", "No"],
         horizontal=True
     )
+    max_user_count = len(total_users_dict)
     if pickme == "Yes":
-        num_candidates = len(user_dict)
-        event_data = candidate_info_receiver(key+"Yes", num_candidates, states, user_dict, is_assigned = True)
+        num_candidates = max_user_count
+        event_data = candidate_info_receiver(key+"Yes", num_candidates, states, total_users_dict, is_assigned = True)
     if pickme == "No":
-        num_candidates = st.number_input("이벤트 후보자 수를 입력하세요", value=num_participants, step=1, min_value=1, key=f'{key}_num_candidates', format="%d")
-        if num_candidates > len(user_dict):
+        num_candidates = st.number_input("이벤트 후보자 수를 입력하세요", value=num_participants, step=1, min_value=0, key=f'{key}_num_candidates', format="%d")
+        if num_candidates > max_user_count:
             st.error("전체 후보자 수보다 많은 수를 입력할 수 없습니다.")
             st.stop()
         
         st.markdown(":gray[주의: No를 누른 뒤 Yes를 누르면 데이터가 초기화됩니다.]")
         st.write("참가자 명단을 확인하세요")
-        st.write(user_dict)  
-        event_data = candidate_info_receiver(key+"No", num_candidates, states, user_dict)
+
+        st.write(total_users_dict)  
+
+        event_data = candidate_info_receiver(key+"No", num_candidates, states, total_users_dict)
     st.write("이벤트 후보자 정보: ")
     st.write(event_data)
-    return event_data, num_candidates
+    return event_data
 
 def event_formula_info(var1, var2):
     st.write(f"가중치 계산식 예시: {var1} + {var2}")

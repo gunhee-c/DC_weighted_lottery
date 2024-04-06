@@ -127,7 +127,7 @@ if option_choice == "추첨 정보":
             event_state_pack["event_formula_list"][i] = event_formula
             event_state_pack["event_var_list"][i] = event_var
 
-            event_users = sw.get_event_candidate_info(key, st.session_state["candidates_dict"], event_state_pack, i)
+            event_users = sw.get_event_candidate_info(key, event_state_pack["event_data_list"][i], st.session_state["candidates_dict"], i)
             event_state_pack["event_data_list"][i] = event_users
     event_list_dict = \
     sw.get_event_information(key="tab2", num_events = st.session_state["event_count"], \
