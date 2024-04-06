@@ -13,7 +13,7 @@ r_load = su.parse_loaded_script(r)
 if 'current_page' not in st.session_state:
     st.session_state["current_page"] = "Home"
     st.session_state['candidate_count'] = 0
-    st.session_state['candidate_dict'] = {}
+    st.session_state['candidates_dict'] = {}
     st.session_state['candidate_var'] = ""
     st.session_state['event_count'] = 0
     st.session_state['event_user_count'] = []
