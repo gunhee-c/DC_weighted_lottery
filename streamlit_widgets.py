@@ -89,7 +89,6 @@ def create_widget_name(key, index, addme, state_name, placeholder_name, is_assig
             st_key = key=f'{key}_name_{index}{addme}'
             name = st.text_input(
                 "이름/닉네임을 입력하세요",
-                value=state_name,
                 placeholder=placeholder_name,
                 key= st_key  # Unique key for each name input
             )
@@ -105,14 +104,23 @@ def create_widget_name(key, index, addme, state_name, placeholder_name, is_assig
 
 def create_widget_score(key, i, addme, state_score):
     st_key = f'{key}_score_{i}{addme}'
-    score = st.number_input(
-        "점수를 입력하세요", 
-        value=state_score, 
-        step=1, 
-        min_value=0, 
-        format="%d",
-        key= st_key  # Unique key for each score input
-    )
+    if state_score == 2147483647:
+        score = st.number_input(
+            "점수를 입력하세요", 
+            step=1, 
+            min_value=0, 
+            format="%d",
+            key= st_key  # Unique key for each score input
+        )
+    else:
+        score = st.number_input(
+            "점수를 입력하세요", 
+            value=state_score, 
+            step=1, 
+            min_value=0, 
+            format="%d",
+            key= st_key  # Unique key for each score input
+        )
 
     return score
 
