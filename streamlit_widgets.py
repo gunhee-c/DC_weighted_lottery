@@ -146,6 +146,9 @@ def get_user_input(key, num_candidates, num_state, var_state, candidate_dict = N
 def buffer_event_state(event_state, num_events):
     if num_events > len(event_state[0]):
         buffer = num_events - len(event_state[0])
+    else:
+        buffer = 0
+    
     for _ in range(buffer):
         event_state[0].append("")
         event_state[1].append({})
