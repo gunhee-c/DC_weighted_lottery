@@ -27,7 +27,8 @@ st.session_state.event_var_list = [], [], [], [], [], []
 
 #tab1, tab2, tab3, tab4 = st.sidebar(['후보자 정보 입력', '추첨 정보', '추첨 진행', '결과 확인'])
 with st.sidebar:
-    option_choice = option_menu("가중치/단계적 추첨", ["페이지 소개", "후보자 정보 입력", "추첨 정보", "추첨 진행", "결과 확인"])
+    option_choice = option_menu("가중치/단계적 추첨", \
+                                ["페이지 소개", "후보자 정보 입력", "추첨 정보", "추첨 진행", "결과 확인", "디버깅"])
     st.session_state["current_page"] = option_choice
 
 if option_choice == "페이지 소개":
@@ -83,3 +84,6 @@ if option_choice == "추첨 진행":
 
 if option_choice == "결과 확인":
     su.script_text_writer(r_load, 'tab4_info')
+
+if option_choice == "디버깅":
+    st.write(st.session_state)
