@@ -12,17 +12,17 @@ r_load = su.parse_loaded_script(r)
 
 if 'current_page' not in st.session_state:
     st.session_state["current_page"] = "Home"
-st.session_state['candidate_count'] = 0
-st.session_state['candidate_dict'] = {}
-st.session_state['candidate_var'] = ""
-st.session_state['event_count'] = 0
-st.session_state['event_user_count'] = []
-st.session_state.event_name_list, \
-st.session_state.event_data_list, \
-st.session_state.event_prize_list, \
-st.session_state.event_prize_count_list, \
-st.session_state.event_formula_list, \
-st.session_state.event_var_list = [], [], [], [], [], []
+    st.session_state['candidate_count'] = 0
+    st.session_state['candidate_dict'] = {}
+    st.session_state['candidate_var'] = ""
+    st.session_state['event_count'] = 0
+    st.session_state['event_user_count'] = []
+    st.session_state.event_name_list, \
+    st.session_state.event_data_list, \
+    st.session_state.event_prize_list, \
+    st.session_state.event_prize_count_list, \
+    st.session_state.event_formula_list, \
+    st.session_state.event_var_list = [], [], [], [], [], []
 
 
 #tab1, tab2, tab3, tab4 = st.sidebar(['후보자 정보 입력', '추첨 정보', '추첨 진행', '결과 확인'])
