@@ -34,7 +34,25 @@ with st.sidebar:
 if option_choice == "페이지 소개":
     with st.expander("이 페이지는.."):
         su.script_text_writer(r_load, 'head') 
+        
+if option_choice == "후보자 정보 입력":
+    su.script_text_writer(r_load, 'tab1_info')
+    
+    num_candidates = sw.get_user_count(key="tab1")
+    
+    # Check if candidate count has changed or if candidates_dict is empty, indicating a need for initialization or update
+    if num_candidates != st.session_state['candidate_count'] or not st.session_state['candidates_dict']:
+        st.session_state["candidate_count"] = num_candidates
+        candidates_dict, candidates_var = sw.get_user_input(key="tab1", num_candidates=num_candidates)
+        st.session_state["candidates_dict"] = candidates_dict
+        st.session_state["candidate_var"] = candidates_var
+    else:
+        # Optionally, use this else block to display existing information without re-fetching input
+        pass
 
+    st.write("Candidates and their scores:")
+    st.write(st.session_state["candidates_dict"])
+'''
 if option_choice == "후보자 정보 입력":
     su.script_text_writer(r_load, 'tab1_info')
     
@@ -50,7 +68,7 @@ if option_choice == "후보자 정보 입력":
     st.session_state["candidates_dict"] = candidates_dict
     st.session_state["candidate_var"] = candidates_var
     st.write(st.session_state["candidates_dict"])   
-
+'''
      
 if option_choice == "추첨 정보":
     su.script_text_writer(r_load, 'tab2_info')
