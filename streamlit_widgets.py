@@ -24,8 +24,14 @@ def get_user_count(key, state, user_list = [], is_assigned = False, max_users = 
 #is_assigned: 유저 정보가 이미 할당되어 있는 경우
 
 def make_state_list(state, num_candidates):
-    state_names = list(state.keys())
-    state_scores = list(state.values())
+    try:
+        state_names = list(state.keys())
+    except:
+        state_names = []
+    try:
+        state_scores = list(state.values())
+    except:
+        state_scores = []
     if len(state_names) < num_candidates:
         for i in range(num_candidates - len(state_names)):
             state_names.append("")
