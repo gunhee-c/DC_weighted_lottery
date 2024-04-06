@@ -23,7 +23,8 @@ def get_user_count(key, state, user_list = [], is_assigned = False, max_users = 
 #candidate_dict: 유저 명단이 이미 확보되어 있는 경우
 #is_assigned: 유저 정보가 이미 할당되어 있는 경우
 
-def make_state_list(state, num_candidates):
+#state_list를 for문 내에 돌릴 수 있도록 buffer:
+def buffer_state_list(state, num_candidates):
     try:
         state_names = list(state.keys())
     except:
@@ -37,15 +38,16 @@ def make_state_list(state, num_candidates):
             state_names.append("")
             state_scores.append(2147483647)
     return state_names, state_scores
+
 #userinput_widget(키, 참여자 수, 참여자 정보, 토탈 유저 명단, 지정했는지 여부)
-def userinput_widget(key, num_candidates, state, candidate_dict = None, is_assigned = False):
+def candidate_info_receiver(key, num_candidates, state, candidate_dict = None, is_assigned = False):
     try:
         user_list = list(candidate_dict.keys())
     except:
         user_list = []
     current_user_list = []
     user_info = {}
-    state_names, state_scores = make_state_list(state, num_candidates)
+    state_names, state_scores = buffer_state_list(state, num_candidates)
     for i in range(num_candidates):
         if is_assigned:
             name, score = unit_userinput_widget(key, i, state_names[i], state_scores[i], user_list, current_user_list, user_list[i])
@@ -56,59 +58,50 @@ def userinput_widget(key, num_candidates, state, candidate_dict = None, is_assig
     return user_info
 
 
-
-def unit_userinput_widget(key, i, state_name, state_score, user_list, current_user_list, assigned_user = None):
+#unit_userinput_widget(키, 인덱스, 현재 이름, 현재 점수, 유저 명단, 현재 유저 명단, 지정된 유저)
+def unit_userinput_widget(key, i, current_name, current_score, total_user_list, current_user_list, assigned_user = None):
     # Create a row of 2 columns
     col1, col2 = st.columns(2)
-    addme = ""
+
     current_user_list = []
+
+    addme = ""
     if assigned_user:
-        placeholder_name = assigned_user
         addme = "(Assigned)"
-    else:
-        placeholder_name = "This is a placeholder"
     is_assigned = False
     if assigned_user:
         is_assigned = True
 
     with col1:  # Use the first column for the name input
-        name = create_widget_name(key, i, addme, state_name, placeholder_name, is_assigned)
+        name = assign_name_widget(key, i, addme, current_name, assigned_user, is_assigned)
         
     with col2:  # Use the second column for the score input
-        score = create_widget_score(key, i, addme, state_score)
+        score = assign_score_widget(key, i, addme, current_score)
 
-    check_user_input(name, user_list, current_user_list, assigned_user)
+    if is_assigned == False:
+        check_user_input(name, total_user_list, current_user_list)
 
     return [name, score]
 
-def create_widget_name(key, index, addme, state_name, placeholder_name, is_assigned = False):
+def assign_name_widget(key, index, addme, state_name, assigned_user, is_assigned = False):
   # If no name is provided, use the placeholder
     if is_assigned:
         st_key = f'{key}_name_{index}{addme}'
         name = st.text_input(
             "이름/닉네임을 입력하세요",
-            value=placeholder_name,
+            value= assigned_user,
             key= st_key  # Unique key for each name input
         )
     else:
-        if state_name == "":
-            st_key = key=f'{key}_name_{index}{addme}'
-            name = st.text_input(
-                "이름/닉네임을 입력하세요",
-                placeholder=placeholder_name,
-                key= st_key  # Unique key for each name input
-            )
-        else:
-            st_key = key=f'{key}_name_{index}{addme}'
-            name = st.text_input(
-                "이름/닉네임을 입력하세요",
-                value=state_name,
-                placeholder=placeholder_name,
-                key= st_key  # Unique key for each name input
-            )
+        st_key = key=f'{key}_name_{index}{addme}'
+        name = st.text_input(
+            "이름/닉네임을 입력하세요",
+            value = state_name,
+            key= st_key  # Unique key for each name input
+        )
     return name
 
-def create_widget_score(key, i, addme, state_score):
+def assign_score_widget(key, i, addme, state_score):
     st_key = f'{key}_score_{i}{addme}'
     if state_score == 2147483647:
         score = st.number_input(
@@ -131,24 +124,26 @@ def create_widget_score(key, i, addme, state_score):
 
     return score
 
-def check_user_input(name, user_list, current_user_list, assigned_user):
-    if assigned_user == None: #이름이 할당되어 있지 않은 경우
-        if name in current_user_list:
+def check_user_input(name, total_user_list, current_user_list):
+    if name in current_user_list:
+        if name != "":
+            st.error(f"닉네임/이름 {name}: 중복된 데이터가 있습니다.")
+        #st.stop()
+    if total_user_list != []:
+        if name not in total_user_list:
             if name != "":
-               st.error(f"닉네임/이름 {name}: 중복된 데이터가 있습니다.")
-            #st.stop()
-        if user_list != []:
-            if name not in user_list:
-                if name != "":
-                    st.error(f"닉네임/이름 {name}: 참가자 명단에 없습니다.")
-                    #st.stop()
+                st.error(f"닉네임/이름 {name}: 참가자 명단에 없습니다.")
+                #st.stop()
 
-def get_user_input(key, num_candidates, num_state, var_state, candidate_dict = None, is_assigned = False):
-    user_input_dict = userinput_widget(key, num_candidates, num_state, candidate_dict, is_assigned)
+
+#유저 정보를 입력받아 반환하는 함수 - 
+def get_total_candidates_info(key, num_candidates, current_num_candidate, current_var_name, candidate_dict = None, is_assigned = False):
+    candidate_info_dict = candidate_info_receiver(key, num_candidates, current_num_candidate, candidate_dict, is_assigned)
     st.write("마지막으로..")
-    var_name = st.text_input("변수명을 입력하세요", value = var_state, key=f'{key}_variable_name')
-    return user_input_dict, var_name
+    candidate_var_name = st.text_input("변수명을 입력하세요", value = current_var_name, key=f'{key}_variable_name')
+    return candidate_info_dict, candidate_var_name
 
+#이벤트 정보를 for문으로 돌릴 수 있도록 동적으로 initialize
 def buffer_event_state(event_state, num_events):
     if num_events > len(event_state[0]):
         buffer = num_events - len(event_state[0])
@@ -165,47 +160,54 @@ def buffer_event_state(event_state, num_events):
         event_state[6].append(0)
     return event_state
 
-def get_event_input(key, num_events, users_dict, var_name, event_state):
+def construct_event_tabs(num_events):
+    for i in range(num_events):
+        event_tabs = []
+        event_divisions = []
+        event_tabs.append(f"이벤트 {i+1}")
+        event_divisions.append(f"event{i+1}")
+    event_divisions = st.tabs(event_tabs)
+    return event_tabs, event_divisions
+
+def get_event_information(key, num_events, total_candidate_dict, total_candidate_var_name, current_events):
     #event_state = 
     #[event_name_list, event_data_list, event_prize_list, 
     #event_prize_count_list, event_formula_list, event_var_list]
-    event_state_mod = buffer_event_state(event_state, num_events)
+    total_event_states = buffer_event_state(current_events, num_events)
 
     event_name_list, event_data_list, event_prize_list, event_prize_count_list, \
-    event_formula_list, event_var_list, event_tabs, event_divisions = ([] for _ in range(8))
+    event_formula_list, event_var_list, event_participant_count_list = ([] for _ in range(7))
     
     st.write("---")
 
-    for i in range(num_events):
-        event_tabs.append(f"이벤트 {i+1}")
-        event_divisions.append(f"event{i+1}")
-    event_division = st.tabs(event_tabs)
+    event_tabs, event_division = construct_event_tabs(num_events)
 
     for i in range(num_events):
         with event_division[i]:
             st.header(f"이벤트 {i+1}: ")
-            event_name = st.checkbox("이벤트 명 입력", key=f'{key}_event_check_{i}')
+            event_name = st.checkbox("이벤트 명 입력", key=f'{key}_event_checkbox_{i}')
             if event_name:
-                get_event_name = st.text_input("이벤트 명을 입력하세요", value = event_state_mod[0][i], \
+                get_event_name = st.text_input("이벤트 명을 입력하세요", value = total_event_states[0][i], \
                                                key=f'{key}_event_name_{i}')
             
             event_prize, event_prize_count, event_formula, event_var\
-                    = get_event_info(key+str(i), var_name, event_state_mod, i)
-            event_data = get_event_input_radio(key+str(i), event_state_mod[6][i], event_state_mod[1][i], users_dict)
+                    = get_event_info(key+str(i), total_candidate_var_name, total_event_states, i)
 
+            event_data, event_participant_count = \
+                get_event_input_radio(key+str(i), total_event_states[6][i], total_event_states[1][i], total_candidate_dict)
+            
             event_prize_list.append(event_prize)
             event_prize_count_list.append(event_prize_count)
             event_formula_list.append(event_formula)
             event_var_list.append(event_var)
+            event_participant_count_list.append(event_participant_count)
 
             if event_name:
                 event_name_list.append(get_event_name)
             else: 
                 event_name_list.append(event_prize)
-
             event_data_list.append(event_data)
 
-            st.write("---")
     return event_name_list, event_data_list, event_prize_list, event_prize_count_list, event_formula_list, event_var_list
 
 def get_event_info(key, var_name, event_state_mod, i):
@@ -220,7 +222,7 @@ def get_event_info(key, var_name, event_state_mod, i):
     with col3:
         event_var = st.text_input("이벤트 변수명:", value = event_state_mod[5][i], key=f'{key}_variable_name')
     event_formula = st.text_input("이벤트 가중치 계산식을 입력하세요", value = event_state_mod[4][i], key=f'{key}_formula')
-    with st.expander("도움말을 확인하세요"):
+    with st.expander("수식을 입력하는 방법:"):
         event_formula_info(var_name, event_var)
     return event_prize, event_prize_count, event_formula, event_var
 
@@ -235,7 +237,7 @@ def get_event_input_radio(key, num_participants, states, user_dict):
     )
     if pickme == "Yes":
         num_candidates = len(user_dict)
-        event_data = userinput_widget(key+"Yes", num_candidates, states, user_dict, is_assigned = True)
+        event_data = candidate_info_receiver(key+"Yes", num_candidates, states, user_dict, is_assigned = True)
     if pickme == "No":
         num_candidates = st.number_input("이벤트 후보자 수를 입력하세요", value=num_participants, step=1, min_value=1, key=f'{key}_num_candidates', format="%d")
         if num_candidates > len(user_dict):
@@ -245,10 +247,10 @@ def get_event_input_radio(key, num_participants, states, user_dict):
         st.markdown(":gray[주의: No를 누른 뒤 Yes를 누르면 데이터가 초기화됩니다.]")
         st.write("참가자 명단을 확인하세요")
         st.write(user_dict)  
-        event_data = userinput_widget(key+"No", num_candidates, states, user_dict)
+        event_data = candidate_info_receiver(key+"No", num_candidates, states, user_dict)
     st.write("이벤트 후보자 정보: ")
     st.write(event_data)
-    return event_data
+    return event_data, num_candidates
 
 def event_formula_info(var1, var2):
     st.write(f"가중치 계산식 예시: {var1} + {var2}")
