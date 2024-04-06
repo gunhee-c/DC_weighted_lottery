@@ -22,8 +22,8 @@ if option_choice == "후보자 정보 입력":
     candidates_info, var_name = sw.get_user_input(key = "tab1")
     st.write("Candidates and their scores:")
 
-    st.session_state.candidates_info = candidates_info
-    st.session_state.var_name = var_name
+    st.session_state["candidates_info"] = candidates_info
+    st.session_state["candidate_var_name"] = var_name
     st.write(st.session_state.candidates_info)   
 
      
