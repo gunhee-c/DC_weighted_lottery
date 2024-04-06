@@ -62,11 +62,13 @@ def buffer_event_state(event_state_pack, num_events):
 
 
 
+
 def construct_event_tabs(num_events):
-    for i in range(num_events):
+    with st.tabs() as all_tabs:  # Assuming this container syntax exists or is similar
         event_tabs = []
-        event_tabs.append(f"이벤트 {i+1}")
-    event_tabs = st.tabs(event_tabs)
+        for i in range(num_events):
+            tab = all_tabs.tab(f"이벤트 {i+1}")
+            event_tabs.append(tab)
     return event_tabs
 
 def get_event_name(i):
