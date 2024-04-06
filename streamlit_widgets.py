@@ -22,26 +22,27 @@ def get_user_count(key, state, user_list = [], is_assigned = False, max_users = 
 #유저 정보의 리스트를 입력받아 반환하는 함수
 #candidate_dict: 유저 명단이 이미 확보되어 있는 경우
 #is_assigned: 유저 정보가 이미 할당되어 있는 경우
-def userinput_widget(key, num_candidates, candidate_dict = None, is_assigned = False):
+def userinput_widget(key, num_candidates, state, candidate_dict = None, is_assigned = False):
     try:
         user_list = list(candidate_dict.keys())
     except:
         user_list = []
     current_user_list = []
     user_info = {}
-
+    state_names = list(state.keys())
+    state_scores = list(state.values())
     for i in range(num_candidates):
         if is_assigned:
-            name, score = unit_userinput_widget(key, i, user_list, current_user_list, user_list[i])
+            name, score = unit_userinput_widget(key, i, state_names[i], state_scores[i], user_list, current_user_list, user_list[i])
         else:
-            name, score = unit_userinput_widget(key, i, user_list, current_user_list)
+            name, score = unit_userinput_widget(key, i, state_names[i], state_scores[i], user_list, current_user_list)
         user_info[name] = score
         current_user_list.append(name)
     return user_info
 
 
 
-def unit_userinput_widget(key, i, user_list, current_user_list, assigned_user = None):
+def unit_userinput_widget(key, i, state_name, state_score, user_list, current_user_list, assigned_user = None):
     # Create a row of 2 columns
     col1, col2 = st.columns(2)
     addme = ""
@@ -52,16 +53,16 @@ def unit_userinput_widget(key, i, user_list, current_user_list, assigned_user = 
     else:
         placeholder_name = "This is a placeholder"
     with col1:  # Use the first column for the name input
-        name = create_widget_name(key, i, addme, placeholder_name, assigned_user)
+        name = create_widget_name(key, i, addme, state_name, placeholder_name, assigned_user)
         
     with col2:  # Use the second column for the score input
-        score = create_widget_score(key, i, addme)
+        score = create_widget_score(key, i, addme, state_score)
 
     check_user_input(name, user_list, current_user_list, assigned_user)
 
     return [name, score]
 
-def create_widget_name(key, index, addme, placeholder_name, assigned_user = False):
+def create_widget_name(key, index, addme, state_name, placeholder_name, assigned_user = False):
     if assigned_user:
         st_key = f'{key}_name_{index}{addme}'
         name = st.text_input(
@@ -73,16 +74,17 @@ def create_widget_name(key, index, addme, placeholder_name, assigned_user = Fals
         st_key = key=f'{key}_name_{index}{addme}'
         name = st.text_input(
             "이름/닉네임을 입력하세요",
+            value=state_name,
             placeholder=placeholder_name,
             key= st_key  # Unique key for each name input
         )
     return name
 
-def create_widget_score(key, i, addme):
+def create_widget_score(key, i, addme, state_score):
     st_key = f'{key}_score_{i}{addme}'
     score = st.number_input(
         "점수를 입력하세요", 
-        value=1, 
+        value=state_score, 
         step=1, 
         min_value=0, 
         format="%d",
@@ -103,8 +105,8 @@ def check_user_input(name, user_list, current_user_list, assigned_user):
                     st.error(f"닉네임/이름 {name}: 참가자 명단에 없습니다.")
                     #st.stop()
 
-def get_user_input(key, num_candidates, candidate_dict = None, max_users = None):
-    user_input_dict = userinput_widget(key, num_candidates, candidate_dict, max_users)
+def get_user_input(key, num_candidates, state, candidate_dict = None, max_users = None):
+    user_input_dict = userinput_widget(key, num_candidates, state, candidate_dict, max_users)
     st.write("마지막으로..")
     var_name = st.text_input("변수명을 입력하세요", key=f'{key}_variable_name')
     return user_input_dict, var_name

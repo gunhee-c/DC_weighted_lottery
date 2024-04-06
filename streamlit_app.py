@@ -42,7 +42,7 @@ if option_choice == "후보자 정보 입력":
 
     st.session_state["candidate_count"] = num_candidates
 
-    candidates_dict, candidates_var =sw.get_user_input(key="tab1", num_candidates=num_candidates)
+    candidates_dict, candidates_var =sw.get_user_input(key="tab1", num_candidates=num_candidates, state=st.session_state['candidates_dict'])
 
     st.write("Candidates and their scores:")
 
