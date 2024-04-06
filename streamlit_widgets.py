@@ -53,12 +53,12 @@ def unit_userinput_widget(key, i, user_list, assigned_user = None):
         placeholder_name = "This is a placeholder"
     with col1:  # Use the first column for the name input
         name = create_widget_name(key, i, addme, placeholder_name, assigned_user)
-        current_user_list.append(name)
+        
     with col2:  # Use the second column for the score input
         score = create_widget_score(key, i, addme)
 
     check_user_input(name, user_list, current_user_list, assigned_user)
-
+    current_user_list.append(name)
 
     return [name, score]
 
