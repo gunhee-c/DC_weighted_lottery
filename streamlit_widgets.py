@@ -171,7 +171,7 @@ def get_event_candidate_info(key, num_participants, states, total_users_dict):
         options = ["Yes", "No"],
         horizontal=True
     )
-    max_user_count = len(total_users_dict.keys())
+    max_user_count = len(list(total_users_dict.keys()))
     if pickme == "Yes":
         num_candidates = max_user_count
         event_data = candidate_info_receiver(key+"Yes", num_candidates, states, total_users_dict, is_assigned = True)
