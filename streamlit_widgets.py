@@ -149,7 +149,7 @@ def get_event_input(key, num_events, users_dict, var_name):
     return event_name_list, event_data_list, event_prize_list, event_prize_count_list, event_formula_list, event_var_list
 
 def get_event_info(key, var_name):
-    col1, col2, col3 = st.columns(2)
+    col1, col2, col3 = st.columns(3)
     with col1:
         event_prize = st.text_input("상품 명:", key=f'{key}_prize')
     with col2:
