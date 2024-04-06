@@ -97,11 +97,11 @@ def check_user_input(name, user_list, current_user_list, assigned_user):
             if name != "":
                st.error(f"닉네임/이름 {name}: 중복된 데이터가 있습니다.")
             #st.stop()
-    if user_list != []:
-        if name not in user_list:
-            if name != "":
-                st.error(f"닉네임/이름 {name}: 참가자 명단에 없습니다.")
-                #st.stop()
+        if user_list != []:
+            if name not in user_list:
+                if name != "":
+                    st.error(f"닉네임/이름 {name}: 참가자 명단에 없습니다.")
+                    #st.stop()
 
 def get_user_input(key, num_candidates, candidate_dict = None, max_users = None):
     user_input_dict = userinput_widget(key, num_candidates, candidate_dict, max_users)
