@@ -15,7 +15,7 @@ if 'current_page' not in st.session_state:
     st.session_state['candidate_count'] = 0
     st.session_state['candidates_dict'] = {}
     st.session_state['candidate_var'] = ""
-    st.session_state['event_count'] = 0
+    st.session_state['event_count'] = 1
     st.session_state['event_user_count'] = []
     st.session_state.event_name_list, \
     st.session_state.event_data_list, \
