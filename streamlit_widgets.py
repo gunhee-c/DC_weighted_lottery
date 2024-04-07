@@ -169,11 +169,10 @@ def get_event_candidate_info(key, num_participants, states, total_users_dict):
     pickme = st.radio(
         key = key,
         label= "해당 이벤트 후보자 = 전체 후보자인가요?",
-        options = ["Yes", "No"],
+        options = ["*None*","Yes", "No"],
         horizontal=True,
-        index = None
     )
-    if pickme.index == None:
+    if pickme == "*None*":
         st.error("하나를 선택해주세요.")
         st.stop()
     max_user_count = len(list(total_users_dict.keys()))
