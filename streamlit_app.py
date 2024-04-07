@@ -93,8 +93,7 @@ def show_winners_gradually(event_list, event_prize, winner_list):
         with st.expander(f"{event_list[i]} 당첨자를 확인하세요:"):
             num_input = st.number_input("출력할 당첨자 수를 입력하세요", value=0, step=1, min_value=0, max_value = len(winner_list[i]), key=f'num_input{i}', format="%d")
             for j in range(num_input):
-                if j > 0:
-                    st.success(winner_list[i][j-1]+ "님 축하드립니다!")
+                st.success(winner_list[i][j]+ "님 축하드립니다!")
 
             if num_input == len(winner_list[i]):
                 st.write(f":rainbow[{event_prize[i]} 받아가세요!]")
