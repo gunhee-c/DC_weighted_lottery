@@ -23,7 +23,7 @@ if 'current_page' not in st.session_state:
     st.session_state.event_formula_list = [""]
     st.session_state.event_var_list = [""]
     st.session_state.event_user_count = [0]
-
+    st.session_state.event_name_selected = [False]
 event_state_pack = {
     "event_name_list": st.session_state.event_name_list,
     "event_data_list": st.session_state.event_data_list,
@@ -31,7 +31,8 @@ event_state_pack = {
     "event_prize_count_list": st.session_state.event_prize_count_list,
     "event_formula_list": st.session_state.event_formula_list,
     "event_var_list": st.session_state.event_var_list,
-    "event_user_count": st.session_state.event_user_count
+    "event_user_count": st.session_state.event_user_count,
+    "event_name_selected": st.session_state.event_name_selected
 }
 
 #Pending
@@ -43,6 +44,7 @@ def update_event_states(event_list_dict):
     st.session_state.event_formula_list = event_list_dict["event_formula_list"]
     st.session_state.event_var_list = event_list_dict["event_var_list"]
     st.session_state.event_user_count = event_list_dict["event_user_count"]
+    st.session_state.event_name_selected = event_list_dict["event_name_selected"]
 
 def buffer_event_state(event_state_pack, num_events):
     if num_events > len(event_state_pack["event_name_list"]):
@@ -57,6 +59,7 @@ def buffer_event_state(event_state_pack, num_events):
         event_state_pack["event_formula_list"].append("")
         event_state_pack["event_var_list"].append("")
         event_state_pack["event_user_count"].append(0)
+        event_state_pack["event_name_selected"].append(False)
     return event_state_pack
 
 
@@ -70,15 +73,15 @@ def construct_event_tabs(num_events):
         event_tab_name.append(f"이벤트 {i+1}")
     return event_tabs, event_tab_name
 
-def get_event_name(i):
+def get_event_name(i, value):
     st.header(f"이벤트 {i+1}: ")
-    event_name = st.checkbox("이벤트 명 입력", key=f'event_checkbox_{i}')
+    event_name = st.checkbox("이벤트 명 입력", value = value key=f'event_checkbox_{i}')
     if event_name:
         get_event_name = st.text_input("이벤트 명을 입력하세요", value = st.session_state["event_name_list"][i], \
                                         key=f'event_name_{i}')
     else:
         get_event_name = ""
-    return get_event_name
+    return get_event_name, value
 
 #tab1, tab2, tab3, tab4 = st.sidebar(['후보자 정보 입력', '추첨 정보', '추첨 진행', '결과 확인'])
 with st.sidebar:
@@ -113,7 +116,6 @@ if option_choice == "추첨 정보":
     st.session_state["event_count"] = num_events
 
     event_state_pack = buffer_event_state(event_state_pack, num_events)
-
     event_tabs, event_tab_name = construct_event_tabs(num_events)
 
     event_tabs = st.tabs(event_tab_name)
@@ -121,7 +123,7 @@ if option_choice == "추첨 정보":
     for i in range(num_events):
         key = "event#_" + str(i)
         with event_tabs[i]:
-            event_name = get_event_name(i)
+            event_name, event_name_selected = get_event_name(i, st.session_state["event_name_selected"][i])
             event_state_pack["event_name_list"][i] = event_name
 
             event_prize, event_prize_count, event_formula, event_var = \
@@ -130,7 +132,7 @@ if option_choice == "추첨 정보":
             event_state_pack["event_prize_count_list"][i] = event_prize_count
             event_state_pack["event_formula_list"][i] = event_formula
             event_state_pack["event_var_list"][i] = event_var
-
+            event_state_pack["event_name_selected"][i] = event_name_selected
             event_users = sw.get_event_candidate_info(key, event_state_pack["event_user_count"][i],
                                                       event_state_pack["event_data_list"][i], 
                                                       st.session_state["candidates_dict"])
