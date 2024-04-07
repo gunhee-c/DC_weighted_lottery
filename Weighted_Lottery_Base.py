@@ -19,7 +19,7 @@ def round_dict_values(d, round_to=2):
     for key, value in d.items():
         if isinstance(value, dict):
             # If the value is a dictionary, recursively process it
-            rounded_dict[key] = round_dict_values(value, round_to)
+            rounded_dict[key] = str(round_dict_values(value, round_to))
         elif isinstance(value, float):
             # If the value is a float, round it
             rounded_dict[key] = round(value, round_to)
@@ -202,7 +202,7 @@ class WeightedVote:
     def verify_probability(self):
         for i in range(len(self.candidates.polling_event)):
             st.title(f"Polling Event {i+1}")
-            total_weight = round(sum(self.candidates.polling_event[i].event_evaluated.values()),3)
+            total_weight = str(round(sum(self.candidates.polling_event[i].event_evaluated.values()),3))
             st.write(f"Total Weight: {total_weight}")
             probabilities = {candidate: weight / total_weight for candidate, weight in self.candidates.polling_event[i].event_evaluated.items()}
             st.write(f"Probabilities: ")
