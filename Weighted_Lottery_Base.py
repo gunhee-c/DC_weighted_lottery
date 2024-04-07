@@ -181,7 +181,8 @@ class WeightedVote:
     def poll_one_event(self, polling_index, sleep_time, prevent_duplicate, show_progress = False):
         #print("selected: " + str(self.total_picked_candidates))
         candidates = []
-
+        st.write("이벤트 명: " + self.event_data["event_name_list"][polling_index])
+        st.write("상품 명: " + self.candidates.polling_event[polling_index].prize_name + " , 상품 수: " + str(self.candidates.polling_event[polling_index].prize_count))
         for index in range(self.candidates.polling_event[polling_index].prize_count):
             selected_candidate = self.select_one_candidate(polling_index)
             while prevent_duplicate == True and selected_candidate in self.total_picked_candidates or selected_candidate in candidates:
@@ -275,7 +276,7 @@ class WeightedVote:
                 sleep_time = st.number_input("투표 시간 간격 (0.1초 ~ 10초)", value=1.0, step=0.1, min_value=0.1, max_value = 10.0, key="sleep_time", format="%f")
             if vote:
                 st.write("투표 결과: ")
-                st.write(self.poll_one_event(polling_index, sleep_time, prevent_duplicate = False, show_progress= True))
+                self.poll_one_event(polling_index, sleep_time, prevent_duplicate = False, show_progress= True)
                 self.purge()
         elif polling_radio == "전체: 중복 제외":
             if self.is_prevent_duplicate_possible() == False:
@@ -284,13 +285,13 @@ class WeightedVote:
             sleep_time = st.number_input("투표 시간 간격 (0.1초 ~ 10초)", value=1.0, step=0.1, min_value=0.1, max_value = 10.0, key="sleep_time", format="%f")
             if vote:
                 st.write("투표 결과: ")
-                st.write(self.poll_all_events(sleep_time, prevent_duplicate = True, show_progress = True))
+                self.poll_all_events(sleep_time, prevent_duplicate = True, show_progress = True)
                 self.purge()
         elif polling_radio == "전체: 중복 허용":
             sleep_time = st.number_input("투표 시간 간격 (0.1초 ~ 10초)", value=1.0, step=0.1, min_value=0.1, max_value = 10.0, key="sleep_time", format="%f")
             if vote:
                 st.write("투표 결과: ")
-                st.write(self.poll_all_events(sleep_time, prevent_duplicate = False, show_progress = True))
+                self.poll_all_events(sleep_time, prevent_duplicate = False, show_progress = True)
                 self.purge()
         else:
             pass
