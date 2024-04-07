@@ -84,15 +84,13 @@ class Candidate:
     def write_streamlit(self):
         for i in range(len(self.polling_event)):
             with st.expander(f"Polling Event{i+1}"):
-                st.write("Polling Variables: ")
-                st.write(self.var1 + " " + self.var2_list[i])
-                st.write("Polling Formula: ")
-                st.write(self.formula_list[i])
-                st.write(f"Polling Event{i+1}:")
+                st.write(f"Polling Variables: {self.var1}, {self.var2_list[i]}")
+                st.write(f"Polling Formula: {self.formula_list[i]}")
+                st.write(f"Polling Result:")
                 st.write(self.polling_event[i].event_evaluated)
                 participants = list(self.polling_event[i].event_participants.keys())
                 for j in participants:
-                    st.write(f":gray[User {j}: var1:{self.candidate_dict[j]}, var2:{self.polling_event[i].event_participants[j]}]")
+                    st.write(f":gray[User {j}: x: {self.candidate_dict[j]}, y: {self.polling_event[i].event_participants[j]}]")
         return None        
 
 class PollingEvent:
