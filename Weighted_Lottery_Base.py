@@ -4,24 +4,43 @@ import time
 import streamlit as st
 
 
-def round_dict_values(d, round_to=2):
-    rounded_dict = {}
-    for key, value in d.items():
-        if isinstance(value, float):
-            # If the value is a float, round it
-            rounded_dict[key] = str(round(value, round_to))
-        elif isinstance(value, str) and "." in value:
-            # If the value is a string that represents a float, try to round it
-            try:
-                numeric_value = float(value)
-                rounded_dict[key] = str(round(numeric_value, round_to))
-            except ValueError:
-                # If conversion fails, keep the original string
-                rounded_dict[key] = value
-        else:
-            # Otherwise, copy the value as is
-            rounded_dict[key] = str(value)
-    return rounded_dict
+def combination(list, count):
+    if count == 0:
+        return [[]]
+    
+    if len(list) == 0:
+        return []
+    l = []
+    for i in range(len(list)):
+        m = list[i]
+        remLst = list[i+1:]
+        for p in combination(remLst, count-1):
+            l.append([m] + p)
+    return l
+
+
+def dfs(lst, counts, total_picks):
+    if not lst or not counts:
+        return False
+    #종결조건1: 다음 리스트가 카운트해야하는 수보다 적을 때
+    if len(lst[0]) < counts[0]:
+        return False
+    
+    #종결조건2: 마지막 리스트에 남은 수가 카운트해야하는 수보다 많을 때
+    if len(lst) == 1 and counts[0] <= len(lst[0]):
+        return True
+    
+    combinations = combination(lst[0], counts[0])
+    for comb in combinations:
+        new_picks = total_picks - counts[0]
+        new_lst = [list(set(sublst) - set(comb)) for sublst in lst[1:]] 
+        flag = dfs(new_lst, counts[1:], new_picks)
+        if flag == False:
+            return False
+
+    return True
+
+
 
 
 
@@ -180,14 +199,15 @@ class WeightedVote:
         return candidates
     
     def is_prevent_duplicate_possible(self):
-        remaining_candidates = len(self.candidates.candidate_dict)
-        for event in self.candidates.polling_event:
-            st.write(f"Prize Count: {event.prize_count}")
-            st.write(f"Remaining Candidates: {remaining_candidates}")
-            if event.prize_count > remaining_candidates:
-                return False
-            remaining_candidates -= event.prize_count
-        return True
+        total_prizes = 0
+        for i in range(len(self.candidates.polling_event)):
+            total_prizes += self.candidates.polling_event[i].prize_count
+        user_list = list(self.candidates.polling_event[0].event_participants.keys())
+        prize_list = list(self.candidates.event_data["event_prize_count_list"])
+        st.write(f"참가자 리스트: {user_list}")
+        st.write(f"상품 리스트: {prize_list}")
+        st.write(f"총 상품 수: {total_prizes}")
+        return dfs(user_list, prize_list, total_prizes)
 
     def poll_all_events(self, sleep_time, prevent_duplicate, show_progress = False):
         poll_results = []
