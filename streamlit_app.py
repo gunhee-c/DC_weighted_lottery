@@ -185,14 +185,9 @@ if option_choice == "후보자 정보 입력":
     st.session_state["candidates_dict"] = candidates_dict
     st.session_state["candidate_var"] = candidates_var
 
-    st.write("Candidates and their scores:")
-    st.write(st.session_state["candidates_dict"])   
-
-
     event_candidate_list = []
     for i in range(len(event_state_pack["event_data_list"])):
         event_candidate_list.append(list(event_state_pack["event_data_list"][i].keys()))
-    st.write(event_candidate_list)
     absent_candidates = find_absent_candidates(list(st.session_state['candidates_dict'].keys()), event_candidate_list)
     
     st.session_state['is_candidate_info_valid'] = False
@@ -206,7 +201,8 @@ if option_choice == "후보자 정보 입력":
         st.session_state['is_candidate_info_valid'] = True
         st.success("후보자 정보가 입력되었습니다.")
 
-
+    with st.expander("참가자 정보 확인"):
+        st.write(st.session_state['candidates_dict'])
 if option_choice == "이벤트 정보 입력":
 
     su.script_text_writer(r_load, 'tab2_info')
