@@ -81,15 +81,16 @@ class Candidate:
         st.write("Candidate Info")
         st.write(self.candidate_dict)
         for i in range(len(self.polling_event)):
-            st.write(f"Polling Event{i+1}:")
-            st.write("Participants:")
-            st.write(self.polling_event[i].event_participants)
-            st.write("Prize Name:")
-            st.write(self.polling_event[i].prize_name)
-            st.write("Prize Count:")
-            st.write(self.polling_event[i].prize_count)
-            st.write("Evaluation:")
-            st.write(self.polling_event[i].event_evaluated)
+            with st.expander(f"Polling Event{i+1}"):
+                st.write(f"Polling Event{i+1}:")
+                st.write("Participants:")
+                st.write(self.polling_event[i].event_participants)
+                st.write("Prize Name:")
+                st.write(self.polling_event[i].prize_name)
+                st.write("Prize Count:")
+                st.write(self.polling_event[i].prize_count)
+                st.write("Evaluation:")
+                st.write(self.polling_event[i].event_evaluated)
         return None        
 
 class PollingEvent:

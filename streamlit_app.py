@@ -277,8 +277,8 @@ if option_choice == "데이터 확인 / 추첨 진행":
                               st.session_state.event_formula_list[i], \
                               st.session_state["candidate_var"], \
                               st.session_state.event_var_list[i])
-            with st.expander(f"{i+1}번 이벤트 가중치 확인"):
-                polling.write_streamlit()
+
+        polling.write_streamlit()
         
 #, event_dict, prize_name, prize_count, formula, var1, var2):
 if option_choice == "결과 확인":
