@@ -5,27 +5,15 @@ import streamlit as st
 
 
 def round_dict_values(d, round_to=2):
-    """
-    Recursively rounds floating-point values in a dictionary to a specified number of decimal places.
-    
-    Args:
-        d (dict): The input dictionary, potentially containing nested dictionaries.
-        round_to (int): The number of decimal places to round floating-point values to.
-        
-    Returns:
-        dict: A new dictionary with all floating-point values rounded.
-    """
+
     rounded_dict = {}
     for key, value in d.items():
-        if isinstance(value, dict):
-            # If the value is a dictionary, recursively process it
-            rounded_dict[key] = str(round_dict_values(value, round_to))
-        elif isinstance(value, float):
+        if isinstance(value, float):
             # If the value is a float, round it
-            rounded_dict[key] = round(value, round_to)
+            rounded_dict[key] = str(round(value, round_to))
         else:
             # Otherwise, copy the value as is
-            rounded_dict[key] = value
+            rounded_dict[key] = str(value)
     return rounded_dict
 
 
