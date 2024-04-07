@@ -42,17 +42,20 @@ def buffer_state_list(state, num_candidates):
 #userinput_widget(키, 참여자 수, 참여자 정보, 토탈 유저 명단, 지정했는지 여부)
 def candidate_info_receiver(key, num_candidates, state, candidate_dict = None, is_assigned = False):
     try:
-        user_list = list(candidate_dict.keys())
+        total_user_list = list(candidate_dict.keys())
     except:
-        user_list = []
+        total_user_list = []
+    
     current_user_list = []
     user_info = {}
+    
     state_names, state_scores = buffer_state_list(state, num_candidates)
+    
     for i in range(num_candidates):
         if is_assigned:
-            name, score = unit_userinput_widget(key, i, state_names[i], state_scores[i], user_list, current_user_list, user_list[i])
+            name, score = unit_userinput_widget(key, i, state_names[i], state_scores[i], total_user_list, current_user_list, total_user_list[i])
         else:
-            name, score = unit_userinput_widget(key, i, state_names[i], state_scores[i], user_list, current_user_list)
+            name, score = unit_userinput_widget(key, i, state_names[i], state_scores[i], total_user_list, current_user_list)
         user_info[name] = score
         current_user_list.append(name)
     return user_info
@@ -62,8 +65,6 @@ def candidate_info_receiver(key, num_candidates, state, candidate_dict = None, i
 def unit_userinput_widget(key, i, current_name, current_score, total_user_list, current_user_list, assigned_user = None):
     # Create a row of 2 columns
     col1, col2 = st.columns(2)
-
-    current_user_list = []
 
     addme = ""
     if assigned_user:
