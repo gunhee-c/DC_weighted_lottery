@@ -75,7 +75,7 @@ def construct_event_tabs(num_events):
 
 def get_event_name(i, value):
     st.header(f"이벤트 {i+1}: ")
-    event_name = st.checkbox("이벤트 명 입력", value = value key=f'event_checkbox_{i}')
+    event_name = st.checkbox("이벤트 명 입력", value = value, key=f'event_checkbox_{i}')
     if event_name:
         get_event_name = st.text_input("이벤트 명을 입력하세요", value = st.session_state["event_name_list"][i], \
                                         key=f'event_name_{i}')
