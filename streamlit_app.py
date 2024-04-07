@@ -274,7 +274,8 @@ if option_choice == "데이터 확인":
     for i in range(len(event_state_pack["event_data_list"])):
         list_of_event_candidates.append(list(event_state_pack["event_data_list"][i].keys()))
     is_unique_voting_possible = dfs(list_of_event_candidates, event_state_pack["event_prize_count_list"], sum(event_state_pack["event_prize_count_list"]))
-
+    if is_unique_voting_possible == False:
+        st.error("중복 없는 추첨이 불가능합니다.")
     st.write("---")
 
     #가중치 확인
