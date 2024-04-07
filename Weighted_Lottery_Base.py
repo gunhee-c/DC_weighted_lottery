@@ -182,6 +182,8 @@ class WeightedVote:
     def is_prevent_duplicate_possible(self):
         remaining_candidates = len(self.candidates.candidate_dict)
         for event in self.candidates.polling_event:
+            st.write(f"Prize Count: {event.prize_count}")
+            st.write(f"Remaining Candidates: {remaining_candidates}")
             if event.prize_count > remaining_candidates:
                 return False
             remaining_candidates -= event.prize_count
