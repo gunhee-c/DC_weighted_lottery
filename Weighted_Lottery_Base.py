@@ -300,7 +300,7 @@ class WeightedVote:
                 st.write("투표 결과: ")
                 ans = self.poll_all_events(sleep_time, prevent_duplicate = False, show_progress = True)
                 self.purge()
-        else:
+        elif polling_radio == "*실전으로*":
             st.title("실전 투표:")
             real_vote = st.button("**투표 진행하기**")
             dup = st.checkbox("중복 허용")

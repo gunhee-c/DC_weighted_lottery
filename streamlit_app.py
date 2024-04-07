@@ -46,12 +46,7 @@ event_state_pack = {
 }
 
 
-def show_winners(event_list, event_prize, winner_list):
-    st.write(f"{event_prize} 추첨 결과: ")
 
-
-    for i in range(len(event_list)):
-        st.write(f"{event_list[i]}: {winner_list[i]}")
 
 def search_index(winner_list, text):
     for i in range(len(winner_list)):
@@ -60,7 +55,6 @@ def search_index(winner_list, text):
     return -1
 
 def show_candidate_list(candidate_list):
-    candidate_list = list(candidate_list.keys())
     str = "유저 명단: "
     for i in range(len(candidate_list)):
         str += f"{candidate_list[i]}, "
@@ -77,7 +71,7 @@ def search_winners(event_list, event_prize, winner_list):
     time.sleep(2)
     if text not in st.session_state["candidates_dict"].keys():
         st.error("잘못된 유저 이름입니다.")
-        st.write(show_candidate_list(st.session_state["candidates_dict"]))
+        st.write(show_candidate_list(list(st.session_state["candidates_dict"].keys())))
         st.stop()
     user_index = search_index(total_winner_list, text)
     if user_index == -1:
@@ -88,12 +82,11 @@ def search_winners(event_list, event_prize, winner_list):
     text = ""
 
 def show_winners(event_list, event_prize, winner_list):
-    st.write(f"{event_prize} 추첨 결과: ")
-    show_once = st.checkbox("그냥보여주세요")
-    if show_once:
-        for i in range(len(event_list)):
-            st.write(f"{event_list[i]} 당첨자:") 
-            st.write(f"{winner_list[i]}")
+    for i in range(len(event_list)):
+        show_list = show_candidate_list(winner_list[i])
+        st.title(f"{event_list[i]} 당첨자: (상품): {event_prize[i]}") 
+        st.header(f"{show_list}")
+
 
         
 def buffer_event_state(event_state_pack, num_events):
