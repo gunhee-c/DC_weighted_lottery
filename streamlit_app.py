@@ -111,6 +111,8 @@ def check_polling_formula(formula, var1, var2):
 
     if var1 == "" or var2 == "":
         return False
+    if var1 == var2:
+        return False
     
     allowed_vars = symbols(f'{var1} {var2}')
     
@@ -203,6 +205,7 @@ if option_choice == "후보자 정보 입력":
 
     with st.expander("참가자 정보 확인"):
         st.write(st.session_state['candidates_dict'])
+
 if option_choice == "이벤트 정보 입력":
 
     su.script_text_writer(r_load, 'tab2_info')
@@ -227,6 +230,8 @@ if option_choice == "이벤트 정보 입력":
             event_state_pack["event_formula_list"][i] = event_formula
             event_state_pack["event_var_list"][i] = event_var
             event_state_pack["event_name_selected"][i] = event_name_selected
+            if event_state_pack["event_name_list"][i] == "":
+                event_state_pack["event_name_list"][i] = f"{event_state_pack["event_prize_list"][i]} 이벤트"
 
             event_users, pickme_state, event_user_count = sw.get_event_candidate_info(key, event_state_pack["event_user_count"][i],
                                                       event_state_pack["event_data_list"][i], 
@@ -235,7 +240,7 @@ if option_choice == "이벤트 정보 입력":
             event_state_pack["event_data_list"][i] = event_users
             event_state_pack["event_pickme_state"][i] = pickme_state
             event_state_pack["event_user_count"][i] = event_user_count
-
+            
             event_state_pack["event_valid"][i] = check_event_validity(event_state_pack, i)
 
             check_event_formula_validity(event_state_pack, i)

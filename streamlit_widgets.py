@@ -193,7 +193,7 @@ def get_event_candidate_info(key, num_participants, states, total_users_dict, pi
         num_candidates = st.number_input("이벤트 후보자 수를 입력하세요", value=num_participants, step=1, min_value=0, key=f'{key}_num_candidates', format="%d")
         if num_candidates > max_user_count:
             st.error("전체 후보자 수보다 많은 수를 입력할 수 없습니다.")
-            st.stop()
+            st.write(":gray[전체 후보자를 나중에 입력해도 괜찮습니다.]")
         
         st.markdown(":gray[주의: No를 누른 뒤 Yes를 누르면 데이터가 초기화됩니다.]")
 
