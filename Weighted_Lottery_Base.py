@@ -3,6 +3,33 @@ import random
 import time
 import streamlit as st
 
+
+def round_dict_values(d, round_to=2):
+    """
+    Recursively rounds floating-point values in a dictionary to a specified number of decimal places.
+    
+    Args:
+        d (dict): The input dictionary, potentially containing nested dictionaries.
+        round_to (int): The number of decimal places to round floating-point values to.
+        
+    Returns:
+        dict: A new dictionary with all floating-point values rounded.
+    """
+    rounded_dict = {}
+    for key, value in d.items():
+        if isinstance(value, dict):
+            # If the value is a dictionary, recursively process it
+            rounded_dict[key] = round_dict_values(value, round_to)
+        elif isinstance(value, float):
+            # If the value is a float, round it
+            rounded_dict[key] = round(value, round_to)
+        else:
+            # Otherwise, copy the value as is
+            rounded_dict[key] = value
+    return rounded_dict
+
+
+
 class Candidate:
     
     #누가 참여하는지 + 기본값
@@ -87,7 +114,8 @@ class Candidate:
                 st.write(f"Polling Variables: {self.var1}, {self.var2_list[i]}")
                 st.write(f"Polling Formula: {self.formula_list[i]}")
                 st.write(f"Polling Result:")
-                st.write(self.polling_event[i].event_evaluated)
+                eval_round = round_dict_values(self.polling_event[i].event_evaluated)
+                st.write(eval_round)
                 participants = list(self.polling_event[i].event_participants.keys())
                 for j in participants:
                     st.write(f":gray[User {j}: x: {self.candidate_dict[j]}, y: {self.polling_event[i].event_participants[j]}]")
@@ -174,11 +202,12 @@ class WeightedVote:
     def verify_probability(self):
         for i in range(len(self.candidates.polling_event)):
             st.title(f"Polling Event {i+1}")
-            total_weight = sum(self.candidates.polling_event[i].event_evaluated.values())
+            total_weight = round(sum(self.candidates.polling_event[i].event_evaluated.values()),3)
             st.write(f"Total Weight: {total_weight}")
             probabilities = {candidate: weight / total_weight for candidate, weight in self.candidates.polling_event[i].event_evaluated.items()}
             st.write(f"Probabilities: ")
-            st.write(probabilities)
+            eval_round1 = round_dict_values(probabilities)
+            st.write(eval_round1, 3)
         
             how_many_trials = st.number_input("How many trials?", value=100, step=1, min_value=1, max_value= 10000, key=f'trial_{i}', format="%d")
             winners = {}
