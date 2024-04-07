@@ -169,7 +169,8 @@ def get_event_candidate_info(key, num_participants, states, total_users_dict):
         key = key,
         label= "해당 이벤트 후보자 = 전체 후보자인가요?",
         options = ["Yes", "No"],
-        horizontal=True
+        horizontal=True,
+        index = None
     )
     max_user_count = len(list(total_users_dict.keys()))
     if pickme == "Yes":
