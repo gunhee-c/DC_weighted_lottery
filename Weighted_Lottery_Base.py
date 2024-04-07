@@ -10,7 +10,9 @@ class Candidate:
         """Initialize the candidate with name and initial values."""
         self.candidate_dict = candidate_dict
         self.polling_event = []
-    
+        var1 = ""
+        var2_list = []
+        formula_list = []    
     
     def parse_polling_formula(self, formula, var1, var2):
         # Define the symbols
@@ -37,7 +39,9 @@ class Candidate:
         """Add a polling event and its evaluation."""
         self.polling_event.append(PollingEvent(event_dict, prize_name, prize_count))
         self.add_polling_evaluation(len(self.polling_event) - 1, formula, var1, var2)
-
+        self.var1 = var1
+        self.var2_list.append(var2)
+        self.formula_list.append(formula)
 
     def get_polling_weight(self, event_index, parsing_formula, var1, var2):
         """Calculate polling weights based on the given formula."""
@@ -78,19 +82,17 @@ class Candidate:
         details.extend(str(event) for event in self.polling_event)
         return "\n".join(details)
     def write_streamlit(self):
-        st.write("Candidate Info")
-        st.write(self.candidate_dict)
         for i in range(len(self.polling_event)):
             with st.expander(f"Polling Event{i+1}"):
+                st.write("Polling Variables: ")
+                st.write(self.var1 + " " + self.var2_list[i])
+                st.write("Polling Formula: ")
+                st.write(self.formula_list[i])
                 st.write(f"Polling Event{i+1}:")
-                st.write("Participants:")
-                st.write(self.polling_event[i].event_participants)
-                st.write("Prize Name:")
-                st.write(self.polling_event[i].prize_name)
-                st.write("Prize Count:")
-                st.write(self.polling_event[i].prize_count)
-                st.write("Evaluation:")
                 st.write(self.polling_event[i].event_evaluated)
+                participants = list(self.polling_event[i].event_participants.keys())
+                for j in participants:
+                    st.write(f":gray[User {j}: var1:{self.candidate_dict[j]}, var2:{self.polling_event[i].event_participants[j]}]")
         return None        
 
 class PollingEvent:
