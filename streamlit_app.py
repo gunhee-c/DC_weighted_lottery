@@ -165,7 +165,7 @@ def find_absent_candidates(total_candidates, event_candidates_list):
 #tab1, tab2, tab3, tab4 = st.sidebar(['후보자 정보 입력', '추첨 정보', '추첨 진행', '결과 확인'])
 with st.sidebar:
     option_choice = option_menu("가중치/단계적 추첨", \
-                                ["페이지 소개", "후보자 정보 입력", "이벤트 정보 입력", "데이터 확인 / 추첨 진행", "결과 확인", "디버깅"])
+                                ["페이지 소개", "후보자 정보 입력", "이벤트 정보 입력", "데이터 확인", "추첨 진행", "결과 확인", "디버깅"])
     st.session_state["current_page"] = option_choice
 
 if option_choice == "페이지 소개":
@@ -250,7 +250,7 @@ if option_choice == "이벤트 정보 입력":
 
     st.write("---")
 
-if option_choice == "데이터 확인 / 추첨 진행":
+if option_choice == "데이터 확인":
     if st.session_state['is_candidate_info_valid'] == False:
         st.error("먼저 후보자 정보를 수정하세요.")
         st.stop()
@@ -290,8 +290,19 @@ if option_choice == "데이터 확인 / 추첨 진행":
         polling_simulation = WeightedVote(polling_base)
         polling_simulation.verify_probability()
         st.write("---")
-        polling_simulation.practice_polling()
+
 #, event_dict, prize_name, prize_count, formula, var1, var2):
+if option_choice == "추첨 진행":
+    polling_base_to_go = Candidate(st.session_state["candidates_dict"])
+    for i in range(st.session_state["event_count"]):
+        polling_base_to_go.add_polling_event(st.session_state.event_data_list[i], \
+                          st.session_state.event_prize_list[i], \
+                          st.session_state.event_prize_count_list[i], \
+                          st.session_state.event_formula_list[i], \
+                          st.session_state["candidate_var"], \
+                          st.session_state.event_var_list[i])
+    polling_simulation_to_go = WeightedVote(polling_base_to_go)
+    polling_simulation_to_go.practice_polling()
 if option_choice == "결과 확인":
     su.script_text_writer(r_load, 'tab4_info')
 
