@@ -91,7 +91,7 @@ def show_winners(event_list, event_prize, winner_list):
 def show_winners_gradually(event_list, event_prize, winner_list):
     for i in range(len(event_list)):
         with st.expander(f"{event_list[i]} 당첨자를 확인하세요:"):
-            num_input = st.number_input("출력할 당첨자 수를 입력하세요", value=0, step=1, min_value=0, max_value = len(winner_list[i]), key=f'num_input', format="%d")
+            num_input = st.number_input("출력할 당첨자 수를 입력하세요", key = "wow" + i, value=0, step=1, min_value=0, max_value = len(winner_list[i]), key=f'num_input', format="%d")
             for j in range(num_input):
                 st.write(f"{j+1}번째 당첨자는..:")
                 st.success(winner_list[i][j]+ "님 축하드립니다!")
@@ -99,11 +99,6 @@ def show_winners_gradually(event_list, event_prize, winner_list):
             if num_input == len(winner_list[i]):
                 st.write(f"{event_prize} 받아가세요!")
 
-    with st.expander("당첨자 발표:"):
-        num_input2 = st.number_input("출력할 당첨자 수를 입력하세요", value=1, step=1, min_value=1, max_value = 1000, key=f'num_input', format="%d")
-        if num_input2 > len(winner_list[0]):
-            st.error("출력할 수 있는 당첨자 수보다 많습니다.")
-            st.stop()
 def buffer_event_state(event_state_pack, num_events):
     len_states = len(event_state_pack["event_name_list"])
     if num_events > len_states:
