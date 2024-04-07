@@ -376,7 +376,9 @@ if option_choice == "결과 확인":
     if search:
         search_winners(st.session_state.event_name_list, st.session_state.event_prize_list, st.session_state.final_result)
     else:
-        show_winners(st.session_state.event_name_list, st.session_state.event_prize_list, st.session_state.final_result)
+        checkme = st.checkbox("당첨자 한번에 보기", value = True)
+        if checkme:
+            show_winners(st.session_state.event_name_list, st.session_state.event_prize_list, st.session_state.final_result)
 
 
 if option_choice == "디버깅":
