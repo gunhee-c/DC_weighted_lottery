@@ -192,6 +192,7 @@ if option_choice == "후보자 정보 입력":
         event_candidate_list.append(list(event_state_pack["event_data_list"][i].keys()))
     absent_candidates = find_absent_candidates(list(st.session_state['candidates_dict'].keys()), event_candidate_list)
     
+    st.write("---")
     st.session_state['is_candidate_info_valid'] = False
     if st.session_state['candidates_dict'] == {}:
         st.error("후보자 정보를 입력해주세요.")      
@@ -240,6 +241,8 @@ if option_choice == "이벤트 정보 입력":
             event_state_pack["event_data_list"][i] = event_users
             event_state_pack["event_pickme_state"][i] = pickme_state
             event_state_pack["event_user_count"][i] = event_user_count
+
+            st.write("---")            
             
             event_state_pack["event_valid"][i] = check_event_validity(event_state_pack, i)
 
@@ -254,14 +257,30 @@ if option_choice == "데이터 확인 / 추첨 진행":
     st.write("이벤트 정보: ")
     for i in range(len(st.session_state.event_name_list)):
         with st.expander(f"이벤트 {i+1}:" + " " + st.session_state.event_name_list[i]):
-            st.write("상품: " + st.session_state.event_prize_list[i] + " 수량: " + \
-                     str(st.session_state.event_prize_count_list[i]),\
-                    "계산식: " + st.session_state.event_formula_list[i])       
+            st.write("상품: " + st.session_state.event_prize_list[i])
+            st.write("수량: " + str(st.session_state.event_prize_count_list[i]))
+            st.write("계산식: " + st.session_state.event_formula_list[i])       
             st.write("참가자 정보: ")
             st.write(event_state_pack["event_data_list"][i])
 
     st.write("---")
 
+    #가중치 확인
+    on = st.toggle('가중치 계산을 진행합니다.')
+    if on:
+        st.write('Feature is on')
+        polling = Candidate(st.session_state["candidates_dict"])
+        for i in range(st.session_state["event_count"]):
+            polling.add_polling_event(st.session_state.event_data_list[i], \
+                              st.session_state.event_prize_list[i], \
+                              st.session_state.event_prize_count_list[i], \
+                              st.session_state.event_formula_list[i], \
+                              st.session_state["candidate_var"], \
+                              st.session_state.event_var_list[i])
+        with st.expander(f"{i+1}번 이벤트 가중치 확인"):
+            st.write(str(polling))
+        
+#, event_dict, prize_name, prize_count, formula, var1, var2):
 if option_choice == "결과 확인":
     su.script_text_writer(r_load, 'tab4_info')
 
