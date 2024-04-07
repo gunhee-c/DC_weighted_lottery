@@ -113,6 +113,7 @@ class WeightedVote:
     def __init__(self, candidates):
         self.candidates = candidates
         self.total_picked_candidates = []
+
     def do_weighted_vote(self, type = "One By One", sleep_time = None, duplicate = False):
         if type == "One By One":
             return self.poll_one_event(duplicate)
@@ -169,3 +170,23 @@ class WeightedVote:
     def purge(self):
         self.total_picked_candidates = []
         return self
+    
+    def verify_probability(self):
+        for i in range(len(self.candidates.polling_event)):
+            st.title(f"Polling Event {i+1}")
+            total_weight = sum(self.candidates.polling_event[i].event_evaluated.values())
+            st.write(f"Total Weight: {total_weight}")
+            probabilities = {candidate: weight / total_weight for candidate, weight in self.candidates.polling_event[i].event_evaluated.items()}
+            st.write(f"Probabilities: ")
+            st.write(probabilities)
+        
+            how_many_trials = st.number_input("How many trials?", value=100, step=1, min_value=1, max_value= 10000, key=f'trial_{i}', format="%d")
+            winners = {}
+            for _ in range(how_many_trials):
+                selected_candidate = self.select_one_candidate(i)
+                if selected_candidate in winners:
+                    winners[selected_candidate] += 1
+                else:
+                    winners[selected_candidate] = 1
+            st.write(f"Total Winner counts after {how_many_trials} trials: ")
+            st.write(winners)

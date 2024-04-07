@@ -268,17 +268,19 @@ if option_choice == "데이터 확인 / 추첨 진행":
     #가중치 확인
     on = st.toggle('가중치 계산을 진행합니다.')
     if on:
-        st.write('Feature is on')
-        polling = Candidate(st.session_state["candidates_dict"])
+        st.write('가중치 계산 결과는 다음과 같습니다.')
+        polling_base = Candidate(st.session_state["candidates_dict"])
         for i in range(st.session_state["event_count"]):
-            polling.add_polling_event(st.session_state.event_data_list[i], \
+            polling_base.add_polling_event(st.session_state.event_data_list[i], \
                               st.session_state.event_prize_list[i], \
                               st.session_state.event_prize_count_list[i], \
                               st.session_state.event_formula_list[i], \
                               st.session_state["candidate_var"], \
                               st.session_state.event_var_list[i])
-
-        polling.write_streamlit()
+        polling_base.write_streamlit()
+        st.write("---")
+        polling_simulation = WeightedVote(polling_base)
+        polling_simulation.verify_probability()
         
 #, event_dict, prize_name, prize_count, formula, var1, var2):
 if option_choice == "결과 확인":
