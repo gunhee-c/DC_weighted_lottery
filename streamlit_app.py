@@ -65,7 +65,7 @@ def search_winners(event_list, event_prize, winner_list):
     text = st.text_input("찾고자 하는 사람을 입력해주세요.")
     if text not in st.session_state["candidates_dict"].keys():
         st.error("잘못된 유저 이름입니다.")
-        st.write("유저 명단: ", list(st.session_state["candidates_dict"].keys()))
+        st.write("유저 명단: ", str(list(st.session_state["candidates_dict"].keys())))
         st.stop()
     user_index = search_index(total_winner_list, text)
     if user_index == -1:
