@@ -134,6 +134,7 @@ if option_choice == "후보자 정보 입력":
     event_candidate_list = []
     for i in range(len(event_state_pack["event_data_list"])):
         event_candidate_list.append(list(event_state_pack["event_data_list"][i].keys()))
+    st.write(event_candidate_list)
     absent_candidates = find_absent_candidates(list(st.session_state['candidates_dict'].keys()), event_candidate_list)
     
     if st.session_state['candidate_dict'] == {}:
