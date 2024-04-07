@@ -116,9 +116,9 @@ if option_choice == "추첨 정보":
     event_state_pack = buffer_event_state(event_state_pack, num_events)
 
     event_tabs = construct_event_tabs(event_tabs, event_tab_name, num_events)
-"""
+
     for i in range(num_events):
-        key = "event_" + str(i)
+        key = "event#_" + str(i)
         with event_tabs[i]:
             event_name = get_event_name(i)
             event_state_pack["event_name_list"][i] = event_name
@@ -142,7 +142,7 @@ if option_choice == "추첨 정보":
     update_event_states(event_list_dict)
 
     st.write("---")
-"""
+
 if option_choice == "추첨 진행":
     su.script_text_writer(r_load, 'tab3_info')
     with st.expander("참가자 정보:"):
