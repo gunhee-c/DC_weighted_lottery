@@ -109,8 +109,7 @@ class Candidate:
                 st.write(f"Polling Variables: {self.var1}, {self.var2_list[i]}")
                 st.write(f"Polling Formula: {self.formula_list[i]}")
                 st.write(f"Polling Result:")
-                eval_round = round_dict_values(self.polling_event[i].event_evaluated)
-                st.write(eval_round)
+                st.write(self.polling_event[i].event_evaluated)
                 participants = list(self.polling_event[i].event_participants.keys())
                 for j in participants:
                     st.write(f":gray[User {j}: x: {self.candidate_dict[j]}, y: {self.polling_event[i].event_participants[j]}]")
@@ -203,13 +202,11 @@ class WeightedVote:
             st.write(f"Total Weight: {total_weight_rounded}")
             probabilities = {candidate: weight / total_weight for candidate, weight in self.candidates.polling_event[i].event_evaluated.items()}
             
-            st.write("Probabilities:")
-            for candidate, probability in probabilities.items():
-            # Format the probability as a percentage or a floating-point number, rounded to 2 decimal places
-            # Here, I'm showing it as a floating-point, but you could also multiply by 100 and format as a percentage
-                prob_percent = probability * 100
-                formatted_probability = f"{prob_percent:.5f}"  # Or use "{probability:.2%}" for percentage
-                st.write(f"{candidate}: {formatted_probability}%")
+            with st.expander("Probabilities:"):
+                for candidate, probability in probabilities.items():
+                    prob_percent = probability * 100
+                    formatted_probability = f"{prob_percent:.2f}" 
+                    st.write(f"{candidate}: {formatted_probability}%")
         
             how_many_trials = st.number_input("How many trials? (max = 10000)", value=100, step=1, min_value=1, max_value= 10000, key=f'trial_{i}', format="%d")
             winners = {}
