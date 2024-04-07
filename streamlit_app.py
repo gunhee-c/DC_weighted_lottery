@@ -63,15 +63,12 @@ def buffer_event_state(event_state_pack, num_events):
 
 
 
-def construct_event_tabs(num_events):
-    event_tabs = []
-    event_tab_name = []
+def construct_event_tabs(event_tabs, event_tab_name, num_events):
     for i in range(num_events):
-
         event_tabs.append(f"이벤트 {i+1}")
         event_tab_name.append(f"이벤트 {i+1}")
     event_tab_name = st.tabs(event_tabs)
-    return event_tab_name
+    return
 
 def get_event_name(i):
     st.header(f"이벤트 {i+1}: ")
@@ -110,13 +107,15 @@ if option_choice == "후보자 정보 입력":
 
      
 if option_choice == "추첨 정보":
+
     su.script_text_writer(r_load, 'tab2_info')
     num_events = st.number_input("이벤트 수를 입력하세요", value=st.session_state["event_count"], step=1, min_value=1, max_value = 5, key=f'num_events', format="%d") 
     st.session_state["event_count"] = num_events
-
+    event_tabs = []
+    event_tab_name = []
     event_state_pack = buffer_event_state(event_state_pack, num_events)
 
-    event_tabs = construct_event_tabs(num_events)
+    event_tabs = construct_event_tabs(event_tabs, event_tab_name, num_events)
 """
     for i in range(num_events):
         key = "event_" + str(i)
