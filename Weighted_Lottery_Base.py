@@ -24,7 +24,7 @@ def dfs(lst, counts, total_picks):
         return False
     #종결조건1: 다음 리스트가 카운트해야하는 수보다 적을 때
     if len(lst[0]) < counts[0]:
-        st.error(f"반례: {lst[0]}, {counts[0]}")
+        st.error(f"반례: {lst[0]}, 남은 인원 수: {counts[0]}")
         return False
     
     #종결조건2: 마지막 리스트에 남은 수가 카운트해야하는 수보다 많을 때
@@ -37,7 +37,7 @@ def dfs(lst, counts, total_picks):
         new_lst = [list(set(sublst) - set(comb)) for sublst in lst[1:]] 
         flag = dfs(new_lst, counts[1:], new_picks)
         if flag == False:
-            st.error(f"반례: {comb}")
+            st.error(f"이전에 뽑힌 사람: {comb}")
             return False
 
     return True
