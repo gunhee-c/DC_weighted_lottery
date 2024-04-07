@@ -158,7 +158,7 @@ def get_event_info(key, var_name, event_state, i):
         event_prize_count = st.number_input("상품 수:", value= event_state["event_prize_count_list"][i], step=1, min_value=0, key=f'{key}_prize_count', format="%d")
     with col3:
         event_var = st.text_input("이벤트 변수명:", value = event_state["event_var_list"][i], key=f'{key}_variable_name')
-    event_formula = st.text_input("이벤트 가중치 계산식을 입력하세요", value = event_state["event_formula_list"][i], key=f'{key}_formula')
+    event_formula = st.text_input("이벤트 가중치 계산식을 입력하세요", value = event_state["event_formula_list"][i], max_chars = 150, key=f'{key}_formula')
     st.write(":gray[가중치 추첨을 하지 않는 경우 변수명과 가중치를 입력하지 않아도 괜찮습니다.]")
     with st.expander("수식을 입력하는 방법:"):
         event_formula_info(var_name, event_var)

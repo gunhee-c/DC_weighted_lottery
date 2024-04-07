@@ -369,7 +369,10 @@ if option_choice == "추첨 진행":
         st.session_state["button_clicked"] = button_state
 
 if option_choice == "결과 확인":
-
+    if st.session_state["button_clicked"] == False:
+        st.error("추첨을 먼저 진행해주세요.")
+        st.stop()
+    
     su.script_text_writer(r_load, 'tab4_info')
 
     st.write("추첨 결과: ")
@@ -379,5 +382,7 @@ if option_choice == "결과 확인":
         search_winners(st.session_state.event_name_list, st.session_state.event_prize_list, st.session_state.final_result)
     
     show_winners(st.session_state.event_name_list, st.session_state.event_prize_list, st.session_state.final_result)
+
+
 if option_choice == "디버깅":
     st.write(st.session_state)
