@@ -19,7 +19,7 @@ def combination(list, count):
     return l
 
 
-def dfs(lst, counts, total_picks):
+def dfs_real(lst, counts, total_picks):
     if not lst or not counts:
         return False
     #종결조건1: 다음 리스트가 카운트해야하는 수보다 적을 때
@@ -42,7 +42,20 @@ def dfs(lst, counts, total_picks):
     #st.success("중복 제외 추첨 가능합니다.")
     return True
 
-
+def dfs(lst, counts, total_picks):
+    cumulated_count = []
+    cumulate = 0 
+    early_escape = True
+    for i in range(len(counts)):
+        cumulate += counts[i]
+        cumulated_count.append(cumulate)
+        if cumulate > len(lst[i]):
+            st.write(f":gray[{i+1}번 이벤트 당첨자 수가 누적 당첨자 수보다 적습니다. //시간이 좀 걸릴 수 있어요]")
+            early_escape = False
+            break
+    if early_escape == False:
+        return dfs_real(lst, counts, total_picks)
+    return True
 
 
 
