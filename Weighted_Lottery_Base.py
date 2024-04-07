@@ -5,7 +5,7 @@ import streamlit as st
 
 
 def round_dict_values(d, round_to=2):
-
+    st.title("Rounding")
     rounded_dict = {}
     for key, value in d.items():
         if isinstance(value, float):
