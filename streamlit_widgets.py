@@ -141,6 +141,7 @@ def get_total_candidates_info(key, num_candidates, current_num_candidate, curren
     candidate_info_dict = candidate_info_receiver(key, num_candidates, current_num_candidate, candidate_dict, is_assigned)
     st.write("마지막으로..")
     candidate_var_name = st.text_input("변수명을 입력하세요", value = current_var_name, key=f'{key}_variable_name')
+    st.write(":gray[가중치 추첨을 하지 않는 경우 입력하지 않아도 괜찮습니다.]")
     return candidate_info_dict, candidate_var_name
 
 #이벤트 정보를 for문으로 돌릴 수 있도록 동적으로 initialize
@@ -158,6 +159,7 @@ def get_event_info(key, var_name, event_state, i):
     with col3:
         event_var = st.text_input("이벤트 변수명:", value = event_state["event_var_list"][i], key=f'{key}_variable_name')
     event_formula = st.text_input("이벤트 가중치 계산식을 입력하세요", value = event_state["event_formula_list"][i], key=f'{key}_formula')
+    st.write(":gray[가중치 추첨을 하지 않는 경우 변수명과 가중치를 입력하지 않아도 괜찮습니다.]")
     with st.expander("수식을 입력하는 방법:"):
         event_formula_info(var_name, event_var)
     return event_prize, event_prize_count, event_formula, event_var

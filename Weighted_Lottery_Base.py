@@ -9,31 +9,55 @@ class Candidate:
         """Initialize the candidate with name and initial values."""
         self.candidate_dict = candidate_dict
         self.polling_event = []
-
+    
+    
     def parse_polling_formula(self, formula, var1, var2):
-        """Parse the polling formula to create a sympy expression."""
-        vars = symbols(f'{var1} {var2}')
+        # Define the symbols
+        allowed_vars = symbols(f'{var1} {var2}')
         try:
+            # Attempt to create an expression from the formula
             expression = sympify(formula)
-            is_valid = True
+            # Get all symbols in the expression
+            expression_symbols = expression.free_symbols
+            
+            # Check if there are any symbols in the expression that are not in the allowed list
+            is_valid = all(symbol in allowed_vars for symbol in expression_symbols)
+            
+            if not is_valid:
+                # If invalid, reset to a default expression
+                expression = sympify(f"{allowed_vars[0]}-{allowed_vars[0]}")
         except:
-            expression = sympify(f"{vars[0]}-{vars[0]}")  # Default expression
-            is_valid = False
+            expression = sympify(f"{allowed_vars[0]}-{allowed_vars[0]} + 1")  # Default expression
+            is_valid = False                
         return expression, is_valid
+    
 
-    def add_polling_event(self, event_name_list, event_value_list, prize_name, prize_count, formula, var1, var2):
+    def add_polling_event(self, event_dict, prize_name, prize_count, formula, var1, var2):
         """Add a polling event and its evaluation."""
-        self.polling_event.append(PollingEvent(event_name_list, event_value_list, prize_name, prize_count))
+        self.polling_event.append(PollingEvent(event_dict, prize_name, prize_count))
         self.add_polling_evaluation(len(self.polling_event) - 1, formula, var1, var2)
 
 
     def get_polling_weight(self, event_index, parsing_formula, var1, var2):
         """Calculate polling weights based on the given formula."""
         event = self.polling_event[event_index]
+        not_weighted = False
+        if var1 == "" or var2 == "" or parsing_formula == "":
+            not_weighted = True
+        
+        if not_weighted:
+            polling_weight = {}
+            for key in event.event_participants:
+                polling_weight[key] = 1
+            return polling_weight
+        
         expression, is_valid = self.parse_polling_formula(parsing_formula, var1, var2)
 
         if not is_valid:
-            return "Invalid Formula"
+            polling_weight = {}
+            for key in event.event_participants:
+                polling_weight[key] = 1
+            return polling_weight
         
         polling_weight = {}
         for key in event.event_participants:
@@ -67,7 +91,6 @@ class PollingEvent:
         return self
     
     def __str__(self):
-        
         return str(self.event_participants) + " " + self.prize_name + " " + str(self.prize_count) +"\nCalculate: " + str(self.event_evaluated)
 
 class WeightedVote:

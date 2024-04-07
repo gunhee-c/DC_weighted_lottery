@@ -2,8 +2,9 @@ import streamlit as st
 #from Weighted_Lottery_Base import *
 import Streamlit_Utils as su
 import streamlit_widgets as sw
+from Weighted_Lottery_Base import *
 from streamlit_option_menu import option_menu
-
+from sympy import symbols, sympify, SympifyError
 
 r = su.script_text_loader('streamlit_script.txt')
 r_load = su.parse_loaded_script(r)
@@ -26,6 +27,7 @@ if 'current_page' not in st.session_state:
     st.session_state.event_user_count = [0]
     st.session_state.event_name_selected = [False]
     st.session_state.event_pickme_state = ["*None*"]
+    st.session_state.event_valid = [False]
 
 event_state_pack = {
     "event_name_list": st.session_state.event_name_list,
@@ -36,21 +38,10 @@ event_state_pack = {
     "event_var_list": st.session_state.event_var_list,
     "event_user_count": st.session_state.event_user_count,
     "event_name_selected": st.session_state.event_name_selected,
-    "event_pickme_state": st.session_state.event_pickme_state
-
+    "event_pickme_state": st.session_state.event_pickme_state,
+    "event_valid": st.session_state.event_valid
 }
 
-#Pending
-def update_event_states(event_list_dict):
-    st.session_state.event_name_list = event_list_dict["event_name_list"]
-    st.session_state.event_data_list = event_list_dict["event_data_list"]
-    st.session_state.event_prize_list = event_list_dict["event_prize_list"]
-    st.session_state.event_prize_count_list = event_list_dict["event_prize_count_list"]
-    st.session_state.event_formula_list = event_list_dict["event_formula_list"]
-    st.session_state.event_var_list = event_list_dict["event_var_list"]
-    st.session_state.event_user_count = event_list_dict["event_user_count"]
-    st.session_state.event_name_selected = event_list_dict["event_name_selected"]
-    st.session_state.event_pickme_state = event_list_dict["event_pickme_state"]
 
 def buffer_event_state(event_state_pack, num_events):
     len_states = len(event_state_pack["event_name_list"])
@@ -73,6 +64,7 @@ def buffer_event_state(event_state_pack, num_events):
         event_state_pack["event_user_count"].append(0)
         event_state_pack["event_name_selected"].append(False)
         event_state_pack["event_pickme_state"].append("*None*")
+        event_state_pack["event_valid"].append(False)
     
     for _ in range(reduce):
         event_state_pack["event_name_list"].pop()
@@ -84,12 +76,58 @@ def buffer_event_state(event_state_pack, num_events):
         event_state_pack["event_user_count"].pop()
         event_state_pack["event_name_selected"].pop()
         event_state_pack["event_pickme_state"].pop()    
+        event_state_pack["event_valid"].pop()
     
     return event_state_pack
 
+def check_event_validity(event_state_pack, i):
 
+    if event_state_pack["event_prize_list"][i] == "":
+        st.error(f"이벤트 {i+1}의 상품을 입력해주세요.")
+        return False
+    elif event_state_pack["event_prize_count_list"][i] > event_state_pack["event_user_count"][i]:
+        st.error(f"이벤트 {i+1}의 상품 수량이 참가자 수보다 많습니다.")
+        return False
+    elif event_state_pack["event_user_count"][i] == 0:
+        st.error(f"이벤트 {i+1}의 참가자를 입력해주세요.")
+        return False
+    else:
+        st.success(f"이벤트 {i+1}의 정보가 성공적으로 입력되었습니다.")
+        return True
 
+def check_event_formula_validity(event_state_pack, i):
+    with st.expander("가중치 추첨을 하시는 경우에 확인해주세요."):
+        if st.session_state["candidate_var"] == "":
+            st.error("후보자 변수명을 입력해주세요.")
+        if event_state_pack["event_var_list"][i] == "":
+            st.error(f"이벤트 {i+1}의 변수명을 입력해주세요.")
+        if check_polling_formula(event_state_pack["event_formula_list"][i],st.session_state["candidate_var"],\
+                                    event_state_pack["event_var_list"][i]) == False:
+            st.error(f"이벤트 {i+1}의 가중치 계산식을 확인해주세요.")
+        else:
+            st.success(f"이벤트 {i+1}의 가중치 계산식이 성공적으로 입력되었습니다.")
+            
+def check_polling_formula(formula, var1, var2):
 
+    if var1 == "" or var2 == "":
+        return False
+    
+    allowed_vars = symbols(f'{var1} {var2}')
+    
+    try:
+        # Attempt to create an expression from the formula
+        expression = sympify(formula)
+        # Get all symbols in the expression
+        expression_symbols = expression.free_symbols
+        
+        # Check if there are any symbols in the expression that are not in the allowed list
+        is_valid = all(symbol in allowed_vars for symbol in expression_symbols)
+        
+
+    except SympifyError:
+        is_valid = False
+    
+    return is_valid
 
 def construct_event_tabs(num_events):
     event_tabs, event_tab_name = [], []
@@ -143,9 +181,11 @@ if option_choice == "후보자 정보 입력":
     candidates_dict, candidates_var =sw.get_total_candidates_info(key="tab1", num_candidates=num_candidates, \
                                                        current_num_candidate=st.session_state['candidates_dict'], \
                                                         current_var_name = st.session_state['candidate_var'])
-    st.write("Candidates and their scores:")
+
     st.session_state["candidates_dict"] = candidates_dict
     st.session_state["candidate_var"] = candidates_var
+
+    st.write("Candidates and their scores:")
     st.write(st.session_state["candidates_dict"])   
 
 
@@ -155,17 +195,17 @@ if option_choice == "후보자 정보 입력":
     st.write(event_candidate_list)
     absent_candidates = find_absent_candidates(list(st.session_state['candidates_dict'].keys()), event_candidate_list)
     
+    st.session_state['is_candidate_info_valid'] = False
     if st.session_state['candidates_dict'] == {}:
         st.error("후보자 정보를 입력해주세요.")      
     elif "" in st.session_state['candidates_dict'].keys():
         st.error("후보자 정보를 입력을 완료하세요.")
-    elif st.session_state['candidate_var'] == "":
-        st.error("후보자 변수를 입력해주세요.")
     elif len(absent_candidates) > 0:
         st.error(f"이벤트 참가자 중 누락된 사람이 있습니다: {absent_candidates}")
     else:
         st.session_state['is_candidate_info_valid'] = True
         st.success("후보자 정보가 입력되었습니다.")
+
 
 if option_choice == "이벤트 정보 입력":
 
@@ -191,6 +231,7 @@ if option_choice == "이벤트 정보 입력":
             event_state_pack["event_formula_list"][i] = event_formula
             event_state_pack["event_var_list"][i] = event_var
             event_state_pack["event_name_selected"][i] = event_name_selected
+
             event_users, pickme_state, event_user_count = sw.get_event_candidate_info(key, event_state_pack["event_user_count"][i],
                                                       event_state_pack["event_data_list"][i], 
                                                       st.session_state["candidates_dict"],
@@ -198,6 +239,11 @@ if option_choice == "이벤트 정보 입력":
             event_state_pack["event_data_list"][i] = event_users
             event_state_pack["event_pickme_state"][i] = pickme_state
             event_state_pack["event_user_count"][i] = event_user_count
+
+            event_state_pack["event_valid"][i] = check_event_validity(event_state_pack, i)
+
+            check_event_formula_validity(event_state_pack, i)
+
     st.write("---")
 
 if option_choice == "데이터 확인 / 추첨 진행":
@@ -212,6 +258,9 @@ if option_choice == "데이터 확인 / 추첨 진행":
                     "계산식: " + st.session_state.event_formula_list[i])       
             st.write("참가자 정보: ")
             st.write(event_state_pack["event_data_list"][i])
+
+    st.write("---")
+
 if option_choice == "결과 확인":
     su.script_text_writer(r_load, 'tab4_info')
 
