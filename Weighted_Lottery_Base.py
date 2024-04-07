@@ -202,9 +202,12 @@ class WeightedVote:
     def verify_probability(self):
         for i in range(len(self.candidates.polling_event)):
             st.title(f"Polling Event {i+1}")
-            total_weight = str(round(sum(self.candidates.polling_event[i].event_evaluated.values()),3))
-            st.write(f"Total Weight: {total_weight}")
+            total_weight = sum(self.candidates.polling_event[i].event_evaluated.values())
+            total_weight_rounded = str(round(total_weight, 2))
+            st.write(f"Total Weight: {total_weight_rounded}")
+
             probabilities = {candidate: weight / total_weight for candidate, weight in self.candidates.polling_event[i].event_evaluated.items()}
+            
             st.write(f"Probabilities: ")
             eval_round1 = round_dict_values(probabilities)
             st.write(eval_round1, 3)
