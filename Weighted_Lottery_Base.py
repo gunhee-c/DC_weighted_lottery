@@ -39,7 +39,7 @@ def dfs(lst, counts, total_picks):
         if flag == False:
             st.error(f"이전에 뽑힌 사람: {comb}")
             return False
-
+    st.success("중복 제외 추첨 가능합니다.")
     return True
 
 
@@ -208,8 +208,8 @@ class WeightedVote:
             user_list.append(list(self.candidates.polling_event[i].event_participants.keys()))
         prize_list = list(self.event_data["event_prize_count_list"])
         st.write(f"참가자 리스트: {user_list}")
-        st.write(f"상품 리스트: {prize_list}")
-        st.write(f"총 상품 수: {total_prizes}")
+        st.write(f"상품 수 리스트: {prize_list}")
+        st.write(f"상품 수 총합: {total_prizes}")
         return dfs(user_list, prize_list, total_prizes)
 
     def poll_all_events(self, sleep_time, prevent_duplicate, show_progress = False):
