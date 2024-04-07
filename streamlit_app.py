@@ -269,8 +269,19 @@ if option_choice == "데이터 확인":
             st.write("계산식: " + st.session_state.event_formula_list[i])       
             st.write("참가자 정보: ")
             st.write(event_state_pack["event_data_list"][i])
+    
+    is_unique_voting_possible = True
+    remaining_user_count = len(st.session_state["candidates_dict"])
+    for i in range(st.session_state["event_count"]):
+
+        if st.session_state.event_prize_count_list[i] < remaining_user_count:
+            is_unique_voting_possible = False
+        remaining_user_count -= st.session_state.event_prize_count_list[i]
+
     if sum(event_state_pack["event_prize_count_list"]) > len(st.session_state["candidates_dict"]):
         st.error("이벤트 간 중복 없는 추첨이 불가능합니다 (총 상품 수량> 참가자 수)")
+    elif is_unique_voting_possible == False:
+        st.error("이벤트 간 중복 없는 추첨이 불가능합니다 (이벤트의 순서를 확인하세요")
     st.write("---")
 
     #가중치 확인

@@ -180,9 +180,11 @@ class WeightedVote:
         return candidates
     
     def is_prevent_duplicate_possible(self):
-        total_prize_count = sum([event.prize_count for event in self.candidates.polling_event])
-        if len(self.candidates.candidate_dict) < total_prize_count:
-            return False
+        remaining_candidates = len(self.candidates.candidate_dict)
+        for event in self.candidates.polling_event:
+            if event.prize_count > remaining_candidates:
+                return False
+            remaining_candidates -= event.prize_count
         return True
 
     def poll_all_events(self, sleep_time, prevent_duplicate, show_progress = False):
