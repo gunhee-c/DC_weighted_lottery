@@ -5,7 +5,6 @@ import streamlit as st
 
 
 def round_dict_values(d, round_to=2):
-    st.title("Rounding")
     rounded_dict = {}
     for key, value in d.items():
         if isinstance(value, float):
@@ -199,14 +198,15 @@ class WeightedVote:
         for i in range(len(self.candidates.polling_event)):
             st.title(f"Polling Event {i+1}")
             total_weight = sum(self.candidates.polling_event[i].event_evaluated.values())
-            total_weight_rounded = str(round(total_weight, 2))
+            st.write(f"Total Weight Before Rounding: {total_weight}")
+            # Use string formatting for rounding in the display
+            total_weight_rounded = f"{total_weight:.2f}"
             st.write(f"Total Weight: {total_weight_rounded}")
-
             probabilities = {candidate: weight / total_weight for candidate, weight in self.candidates.polling_event[i].event_evaluated.items()}
             
             st.write(f"Probabilities: ")
             eval_round1 = round_dict_values(probabilities)
-            st.write(eval_round1, 3)
+            st.write(eval_round1)
         
             how_many_trials = st.number_input("How many trials? (max = 10000)", value=100, step=1, min_value=1, max_value= 10000, key=f'trial_{i}', format="%d")
             winners = {}
