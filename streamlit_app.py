@@ -45,6 +45,29 @@ event_state_pack = {
     "event_valid": st.session_state.event_valid
 }
 
+def show_winners(event_list, event_prize, winner_list):
+    st.write(f"{event_prize} 추첨 결과: ")
+
+
+    for i in range(len(event_list)):
+        st.write(f"{event_list[i]}: {winner_list[i]}")
+
+
+def search_winners(event_list, event_prize, winner_list):
+    total_winner_list = []
+    for i in range(len(event_list)):
+        total_winner_list.append(f"{event_list[i]}: {winner_list[i]}")
+    text = st.text_input("찾고자 하는 사람을 입력해주세요.")
+    if text not in st.session_state["candidates_dict"].keys():
+        st.error("잘못된 유저 이름입니다.")
+        st.write("유저 명단: ", st.session_state["candidates_dict"].keys())
+        st.stop()
+    if text not in event_list:
+        st.error(f"아쉽지만 {text}님은 합격자 명단에 없습니다.")
+    if text in event_list:
+        st.success(f"{text}님은 {event_list} 합격자 명단에 있습니다.")
+        st.write(f"축하드립니다! {event_prize} 받아가세요!")
+
 
 def buffer_event_state(event_state_pack, num_events):
     len_states = len(event_state_pack["event_name_list"])
@@ -319,12 +342,18 @@ if option_choice == "추첨 진행":
         st.session_state["button_clicked"] = button_state
 
 if option_choice == "결과 확인":
+
+    su.script_text_writer(r_load, 'tab4_info')
+
     st.write("추첨 결과: ")
     if st.session_state.final_result == []:
         st.error("추첨 결과가 없습니다.")
     else:
         st.write(st.session_state.final_result)
-    su.script_text_writer(r_load, 'tab4_info')
+    
+    search = st.checkbox("당첨자 검색")
+    if search:
+        search_winners(st.session_state.event_name_list, st.session_state.event_prize_list, st.session_state.final_result)
 
 if option_choice == "디버깅":
     st.write(st.session_state)
