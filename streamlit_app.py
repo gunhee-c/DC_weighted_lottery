@@ -115,7 +115,7 @@ if option_choice == "추첨 정보":
     event_tab_name = []
     event_state_pack = buffer_event_state(event_state_pack, num_events)
 
-    event_tabs = construct_event_tabs(event_tabs, event_tab_name, num_events)
+    construct_event_tabs(event_tabs, event_tab_name, num_events)
 
     for i in range(num_events):
         key = "event#_" + str(i)
