@@ -251,6 +251,13 @@ if option_choice == "이벤트 정보 입력":
     st.write("---")
 
 if option_choice == "데이터 확인 / 추첨 진행":
+    if st.session_state['is_candidate_info_valid'] == False:
+        st.error("먼저 후보자 정보를 수정하세요.")
+        st.stop()
+    if event_state_pack["event_valid"].count(True) < st.session_state["event_count"]:
+        st.error("먼저 이벤트 정보를 수정하세요.")
+        st.stop()
+
     su.script_text_writer(r_load, 'tab3_info')
     with st.expander("참가자 정보:"):
         st.write(st.session_state["candidates_dict"])
@@ -262,7 +269,8 @@ if option_choice == "데이터 확인 / 추첨 진행":
             st.write("계산식: " + st.session_state.event_formula_list[i])       
             st.write("참가자 정보: ")
             st.write(event_state_pack["event_data_list"][i])
-
+    if sum(event_state_pack["event_prize_count_list"]) > len(st.session_state["candidates_dict"]):
+        st.error("이벤트 간 중복 없는 추첨이 불가능합니다 (총 상품 수량> 참가자 수)")
     st.write("---")
 
     #가중치 확인

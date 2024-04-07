@@ -152,18 +152,20 @@ class WeightedVote:
         selected_candidate = random.choices(candidates, weights=probs, k=1)[0]
         return selected_candidate
     
-    def select_one_candidate(self, polling_index): #TODO
+    def select_one_candidate(self, polling_index, show_progress, index): #TODO
         selected_candidate = self.select_candidate(self.candidates.polling_event[polling_index].event_evaluated)
+        if show_progress:
+            st.write(f"{index+1}번째 당첨자: {selected_candidate}")
         return selected_candidate
 
-    def poll_one_event(self, polling_index, sleep_time, prevent_duplicate):
+    def poll_one_event(self, polling_index, sleep_time, prevent_duplicate, show_progress = False):
         #print("selected: " + str(self.total_picked_candidates))
         candidates = []
 
-        for _ in range(self.candidates.polling_event[polling_index].prize_count):
-            selected_candidate = self.select_one_candidate(polling_index)
+        for index in range(self.candidates.polling_event[polling_index].prize_count):
+            selected_candidate = self.select_one_candidate(polling_index, show_progress, index)
             while prevent_duplicate == True and selected_candidate in self.total_picked_candidates or selected_candidate in candidates:
-                selected_candidate = self.select_one_candidate(polling_index)            
+                selected_candidate = self.select_one_candidate(polling_index, show_progress, index)            
             candidates.append(selected_candidate)
             if prevent_duplicate:
                 self.total_picked_candidates.append(selected_candidate)
@@ -172,10 +174,16 @@ class WeightedVote:
         #print(candidates)
         return candidates
     
-    def poll_all_events(self, sleep_time, prevent_duplicate):
+    def is_prevent_duplicate_possible(self):
+        total_prize_count = sum([event.prize_count for event in self.candidates.polling_event])
+        if len(self.candidates.candidate_dict) < total_prize_count:
+            return False
+        return True
+
+    def poll_all_events(self, sleep_time, prevent_duplicate, show_progress = False):
         poll_results = []
         for i in range(len(self.candidates.polling_event)):
-            one_poll = self.poll_one_event(i, sleep_time, prevent_duplicate)
+            one_poll = self.poll_one_event(i, sleep_time, prevent_duplicate, show_progress)
             poll_results.append(one_poll)
             #print("####")
             #print(poll_results)
@@ -199,8 +207,8 @@ class WeightedVote:
 
             total_weight = sum(self.candidates.polling_event[i].event_evaluated.values())
 
-            total_weight_rounded = f"{total_weight:.4f}"
-            st.write(f"Total Weight: {total_weight_rounded}")
+            #total_weight_rounded = f"{total_weight:.4f}"
+            #st.write(f"Total Weight: {total_weight_rounded}")
             probabilities = {candidate: weight / total_weight for candidate, weight in self.candidates.polling_event[i].event_evaluated.items()}
             
             with st.expander(f"Probabilities of event {i+1}:"):
@@ -219,3 +227,30 @@ class WeightedVote:
                     winners[selected_candidate] = 1
             st.write(f"Total Winner counts after {how_many_trials} trials: ")
             st.write(winners)
+    
+    def practice_polling(self):
+        st.title("한번 투표해봅시다:")
+        vote = st.button("투표하기")
+        polling_radio = st.radio("전체 vs 단일 이벤트", options = ["전체: 중복 제외", "전체: 중복 허용", "단일 이벤트"], key = "polling_type", index = None, horizontal = True)
+        if polling_radio == "단일 이벤트": 
+            polling_index = st.number_input("투표 이벤트 선택", value=0, step=1, min_value=0, max_value=len(self.candidates.polling_event)-1, key="polling_index", format="%d")
+            sleep_time = st.number_input("투표 시간 간격 (0.1초 ~ 10초)", value=1, step=0.1, min_value=0.1, max_value = 10, key="sleep_time", format="%d")
+            if vote:
+                st.write("투표 결과: ")
+                st.write(self.poll_one_event(polling_index, sleep_time, prevent_duplicate = False, show_progress= True, index = polling_index))
+                self.purge()
+        elif polling_radio == "전체: 중복 제외":
+            if self.is_prevent_duplicate_possible() == False:
+                st.error("상품 수가 총 참가자보다 많습니다.")
+                st.stop()
+            sleep_time = st.number_input("투표 시간 간격 (0.1초 ~ 10초)", value=1, step=0.1, min_value=0.1, max_value = 10, key="sleep_time", format="%d")
+            if vote:
+                st.write("투표 결과: ")
+                st.write(self.poll_all_events(sleep_time, prevent_duplicate = True, show_progress = True))
+                self.purge()
+        elif polling_radio == "전체: 중복 허용":
+            sleep_time = st.number_input("투표 시간 간격 (0.1초 ~ 10초)", value=1, step=0.1, min_value=0.1, max_value = 10, key="sleep_time", format="%d")
+            if vote:
+                st.write("투표 결과: ")
+                st.write(self.poll_all_events(sleep_time, prevent_duplicate = False, show_progress = True))
+                self.purge()
