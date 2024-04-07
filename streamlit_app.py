@@ -64,7 +64,7 @@ def show_candidate_list(candidate_list):
     str = "유저 명단: "
     for i in range(len(candidate_list)):
         str += f"{candidate_list[i]}, "
-    return str
+    return str[:-2]
 def search_winners(event_list, event_prize, winner_list):
 
     total_winner_list = []
