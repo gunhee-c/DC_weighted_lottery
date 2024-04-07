@@ -182,13 +182,11 @@ def get_event_candidate_info(key, num_participants, states, total_users_dict):
             st.stop()
         
         st.markdown(":gray[주의: No를 누른 뒤 Yes를 누르면 데이터가 초기화됩니다.]")
-        st.write("참가자 명단을 확인하세요")
 
-        st.write(total_users_dict)  
 
         event_data = candidate_info_receiver(key+"No", num_candidates, states, total_users_dict)
-    st.write("이벤트 후보자 정보: ")
-    st.write(event_data)
+        st.write("참가자 명단을 확인하세요")
+        st.write(total_users_dict)  
     return event_data
 
 def event_formula_info(var1, var2):
