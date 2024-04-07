@@ -91,10 +91,15 @@ def show_winners(event_list, event_prize, winner_list):
     st.write(f"{event_prize} 추첨 결과: ")
     show = st.button("당첨자 확인")
     show_once = st.checkbox("그냥보여주세요")
-    count = 0
-    event_count = 0
-    current_max_index = 0
-    current_index = 0
+    st.session_state.count = 0
+    st.session_state.event_count = 0
+    st.session_state.current_max_index = 0
+    st.session_state.current_index = 0
+    count = st.session_state.count
+    event_count = st.session_state.event_count
+    current_max_index = st.session_state.current_max_index
+    current_index = st.session_state.current_index
+    
     if show_once:
         for i in range(len(event_list)):
             st.write(f"{event_list[i]} 당첨자:") 
@@ -398,6 +403,7 @@ if option_choice == "결과 확인":
     search = st.checkbox("당첨자 검색")
     if search:
         search_winners(st.session_state.event_name_list, st.session_state.event_prize_list, st.session_state.final_result)
-        show_winners(st.session_state.event_name_list, st.session_state.event_prize_list, st.session_state.final_result)
+    
+    show_winners(st.session_state.event_name_list, st.session_state.event_prize_list, st.session_state.final_result)
 if option_choice == "디버깅":
     st.write(st.session_state)
