@@ -97,7 +97,7 @@ def union_of_lists(*lists):
     return list(union_set)
 
 def find_absent_candidates(total_candidates, event_candidates_list):
-    event_candidates = union_of_lists(event_candidates_list)
+    event_candidates = union_of_lists(*event_candidates_list)
     absent_candidates = []
     for candidate in event_candidates:
         if candidate not in total_candidates:
