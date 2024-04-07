@@ -202,9 +202,10 @@ class WeightedVote:
     
     def is_prevent_duplicate_possible(self):
         total_prizes = 0
+        user_list = []
         for i in range(len(self.candidates.polling_event)):
             total_prizes += self.candidates.polling_event[i].prize_count
-        user_list = list(self.candidates.polling_event[0].event_participants.keys())
+            user_list.append(list(self.candidates.polling_event[i].event_participants.keys()))
         prize_list = list(self.event_data["event_prize_count_list"])
         st.write(f"참가자 리스트: {user_list}")
         st.write(f"상품 리스트: {prize_list}")
