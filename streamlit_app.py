@@ -84,7 +84,8 @@ def search_winners(event_list, event_prize, winner_list):
 def show_winners(event_list, event_prize, winner_list):
     for i in range(len(event_list)):
         show_list = show_candidate_list(winner_list[i])
-        st.title(f"{event_list[i]} 당첨자: (상품): {event_prize[i]}") 
+        st.title(f"{event_list[i]} 당첨자:")
+        st.write(f":gray[(상품): {event_prize[i]}]") 
         st.header(f"{show_list}")
 
 
