@@ -55,7 +55,7 @@ def search_index(winner_list, text):
     return -1
 
 def show_candidate_list(candidate_list):
-    str = "유저 명단: "
+    str = ""
     for i in range(len(candidate_list)):
         str += f"{candidate_list[i]}, "
     return str[:-2]
@@ -71,7 +71,7 @@ def search_winners(event_list, event_prize, winner_list):
     time.sleep(2)
     if text not in st.session_state["candidates_dict"].keys():
         st.error("잘못된 유저 이름입니다.")
-        st.write(show_candidate_list(list(st.session_state["candidates_dict"].keys())))
+        st.write("유저 명단: " + show_candidate_list(list(st.session_state["candidates_dict"].keys())))
         st.stop()
     user_index = search_index(total_winner_list, text)
     if user_index == -1:
@@ -86,10 +86,17 @@ def show_winners(event_list, event_prize, winner_list):
         show_list = show_candidate_list(winner_list[i])
         st.title(f"{event_list[i]} 당첨자:")
         st.write(f":gray[(상품): {event_prize[i]}]") 
-        st.header(f"{show_list}")  
+        st.success(f"{show_list}")  
         st.write("---")
 
-
+def show_winners_gradually(event_list, event_prize, winner_list):
+    for i in range(len(event_list)):
+        show_list = show_candidate_list(winner_list[i])
+        st.title(f"{event_list[i]} 당첨자:")
+        st.write(f":gray[(상품): {event_prize[i]}]") 
+        st.header(f"{show_list}")  
+        st.write("---")
+        time.sleep(2)
         
 def buffer_event_state(event_state_pack, num_events):
     len_states = len(event_state_pack["event_name_list"])
@@ -376,10 +383,11 @@ if option_choice == "결과 확인":
     if search:
         search_winners(st.session_state.event_name_list, st.session_state.event_prize_list, st.session_state.final_result)
     else:
-        checkme = st.checkbox("당첨자 한번에 보기", value = True)
+        checkme = st.checkbox("당첨자 한번에 보기", value = False)
         if checkme:
             show_winners(st.session_state.event_name_list, st.session_state.event_prize_list, st.session_state.final_result)
-
+        else:
+            show_winners_gradually(st.session_state.event_name_list, st.session_state.event_prize_list, st.session_state.final_result)
 
 if option_choice == "디버깅":
     st.write(st.session_state)
