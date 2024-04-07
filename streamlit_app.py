@@ -141,7 +141,7 @@ if option_choice == "후보자 정보 입력":
         st.error("후보자 정보를 입력해주세요.")      
     elif "" in st.session_state['candidates_dict'].keys():
         st.error("후보자 정보를 입력을 완료하세요.")
-    elif "" in st.session_state['candidate_var']:
+    elif st.session_state['candidate_var'] == "":
         st.error("후보자 변수를 입력해주세요.")
     elif len(absent_candidates) > 0:
         st.error(f"이벤트 참가자 중 누락된 사람이 있습니다: {absent_candidates}")
