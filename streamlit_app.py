@@ -52,6 +52,11 @@ def show_winners(event_list, event_prize, winner_list):
     for i in range(len(event_list)):
         st.write(f"{event_list[i]}: {winner_list[i]}")
 
+def search_index(winner_list, text):
+    for i in range(len(winner_list)):
+        if text in winner_list[i]:
+            return i
+    return -1
 
 def search_winners(event_list, event_prize, winner_list):
     total_winner_list = []
@@ -60,13 +65,14 @@ def search_winners(event_list, event_prize, winner_list):
     text = st.text_input("찾고자 하는 사람을 입력해주세요.")
     if text not in st.session_state["candidates_dict"].keys():
         st.error("잘못된 유저 이름입니다.")
-        st.write("유저 명단: ", st.session_state["candidates_dict"].keys())
+        st.write("유저 명단: ", list(st.session_state["candidates_dict"].keys()))
         st.stop()
-    if text not in event_list:
+    user_index = search_index(total_winner_list, text)
+    if user_index == -1:
         st.error(f"아쉽지만 {text}님은 합격자 명단에 없습니다.")
-    if text in event_list:
-        st.success(f"{text}님은 {event_list} 합격자 명단에 있습니다.")
-        st.write(f"축하드립니다! {event_prize} 받아가세요!")
+    else:
+        st.success(f"{text}님은 {event_list[user_index]} 합격자 명단에 있습니다.")
+        st.write(f"축하드립니다! 상품은 {event_prize[user_index]}입니다!")
 
 
 def buffer_event_state(event_state_pack, num_events):
