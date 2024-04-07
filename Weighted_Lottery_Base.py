@@ -152,13 +152,9 @@ class WeightedVote:
         selected_candidate = random.choices(candidates, weights=probs, k=1)[0]
         return selected_candidate
     
-    def select_one_candidate(self, polling_index, show_progress, index): #TODO
+    def select_one_candidate(self, polling_index): #TODO
         selected_candidate = self.select_candidate(self.candidates.polling_event[polling_index].event_evaluated)
-        if show_progress:
-            if selected_candidate in self.total_picked_candidates:
-                st.write(f":gray{index+1}번째 당첨자: {selected_candidate} (이미 당첨됨)")
-            else:
-                st.write(f"{index+1}번째 당첨자: {selected_candidate}")
+
         return selected_candidate
 
     def poll_one_event(self, polling_index, sleep_time, prevent_duplicate, show_progress = False):
@@ -166,9 +162,11 @@ class WeightedVote:
         candidates = []
 
         for index in range(self.candidates.polling_event[polling_index].prize_count):
-            selected_candidate = self.select_one_candidate(polling_index, show_progress, index)
+            selected_candidate = self.select_one_candidate(polling_index)
             while prevent_duplicate == True and selected_candidate in self.total_picked_candidates or selected_candidate in candidates:
-                selected_candidate = self.select_one_candidate(polling_index, show_progress, index)            
+                st.write(f":gray[중복 발생] {index+1}번째 당첨자: {selected_candidate} (이미 당첨됨)")
+                selected_candidate = self.select_one_candidate(polling_index)            
+            st.write(f"{index+1}번째 당첨자: {selected_candidate}")
             candidates.append(selected_candidate)
             if prevent_duplicate:
                 self.total_picked_candidates.append(selected_candidate)
