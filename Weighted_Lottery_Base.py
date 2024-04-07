@@ -155,7 +155,10 @@ class WeightedVote:
     def select_one_candidate(self, polling_index, show_progress, index): #TODO
         selected_candidate = self.select_candidate(self.candidates.polling_event[polling_index].event_evaluated)
         if show_progress:
-            st.write(f"{index+1}번째 당첨자: {selected_candidate}")
+            if selected_candidate in self.total_picked_candidates:
+                st.write(f":gray{index+1}번째 당첨자: {selected_candidate} (이미 당첨됨)")
+            else:
+                st.write(f"{index+1}번째 당첨자: {selected_candidate}")
         return selected_candidate
 
     def poll_one_event(self, polling_index, sleep_time, prevent_duplicate, show_progress = False):
