@@ -117,7 +117,7 @@ if option_choice == "추첨 정보":
     event_tabs, event_tab_name = construct_event_tabs(num_events)
 
     event_tabs = st.tabs(event_tab_name)
-    
+
     for i in range(num_events):
         key = "event#_" + str(i)
         with event_tabs[i]:
@@ -131,7 +131,9 @@ if option_choice == "추첨 정보":
             event_state_pack["event_formula_list"][i] = event_formula
             event_state_pack["event_var_list"][i] = event_var
 
-            event_users = sw.get_event_candidate_info(key, event_state_pack["event_data_list"][i], st.session_state["candidates_dict"], i)
+            event_users = sw.get_event_candidate_info(key, event_state_pack["event_user_count"][i],
+                                                      event_state_pack["event_data_list"][i], 
+                                                      st.session_state["candidates_dict"])
             event_state_pack["event_data_list"][i] = event_users
     event_list_dict = \
     sw.get_event_information(key="tab2", num_events = st.session_state["event_count"], \
