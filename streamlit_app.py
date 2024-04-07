@@ -86,7 +86,8 @@ def show_winners(event_list, event_prize, winner_list):
         show_list = show_candidate_list(winner_list[i])
         st.title(f"{event_list[i]} 당첨자:")
         st.write(f":gray[(상품): {event_prize[i]}]") 
-        st.header(f"{show_list}")
+        st.header(f"{show_list}")  
+        st.write("---")
 
 
         
@@ -371,11 +372,11 @@ if option_choice == "결과 확인":
 
     st.write("추첨 결과: ")
     
-    search = st.checkbox("당첨자 검색")
+    search = st.toggle("당첨자 검색/발표")
     if search:
         search_winners(st.session_state.event_name_list, st.session_state.event_prize_list, st.session_state.final_result)
-    
-    show_winners(st.session_state.event_name_list, st.session_state.event_prize_list, st.session_state.final_result)
+    else:
+        show_winners(st.session_state.event_name_list, st.session_state.event_prize_list, st.session_state.final_result)
 
 
 if option_choice == "디버깅":
