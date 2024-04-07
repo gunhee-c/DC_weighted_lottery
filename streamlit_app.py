@@ -16,6 +16,7 @@ if 'current_page' not in st.session_state:
     st.session_state['candidates_dict'] = {}
     st.session_state['candidate_var'] = ""
     st.session_state['event_count'] = 1
+    st.session_state['is_candidate_info_valid'] = False
     st.session_state.event_name_list = [""]
     st.session_state.event_data_list = [{}]
     st.session_state.event_prize_list = [""]
@@ -90,6 +91,19 @@ def get_event_name(i, value):
         get_event_name = ""
     return get_event_name, value
 
+def union_of_lists(*lists):
+    # Convert each list to a set, then perform union operation on all sets
+    union_set = set().union(*lists)
+    return list(union_set)
+
+def find_absent_candidates(total_candidates, event_candidates_list):
+    event_candidates = union_of_lists(event_candidates_list)
+    absent_candidates = []
+    for candidate in event_candidates:
+        if candidate not in total_candidates:
+            absent_candidates.append(candidate)
+    return absent_candidates
+
 #tab1, tab2, tab3, tab4 = st.sidebar(['후보자 정보 입력', '추첨 정보', '추첨 진행', '결과 확인'])
 with st.sidebar:
     option_choice = option_menu("가중치/단계적 추첨", \
@@ -102,7 +116,11 @@ if option_choice == "페이지 소개":
 
 if option_choice == "후보자 정보 입력":
     su.script_text_writer(r_load, 'tab1_info')
-    
+    event_candidate_list = []
+
+    for i in range(len(event_state_pack["event_data_list"])):
+        event_candidate_list.append(event_state_pack["event_data_list"][i])
+
     num_candidates = sw.get_user_count(key="tab1", state = st.session_state['candidate_count'])
 
     st.session_state["candidate_count"] = num_candidates
@@ -115,7 +133,20 @@ if option_choice == "후보자 정보 입력":
     st.session_state["candidate_var"] = candidates_var
     st.write(st.session_state["candidates_dict"])   
 
-     
+    absent_candidates = find_absent_candidates(list(st.session_state['candidates_dict'].keys()), event_candidate_list)
+    
+    if st.session_state['candidate_dict'] == {}:
+        st.error("후보자 정보를 입력해주세요.")      
+    elif "" in st.session_state['candidate_dict'].keys():
+        st.error("후보자 정보를 입력을 완료하세요.")
+    elif "" in st.session_state['candidate_var']:
+        st.error("후보자 변수를 입력해주세요.")
+    elif len(absent_candidates) > 0:
+        st.error(f"이벤트 참가자 중 누락된 사람이 있습니다: {absent_candidates}")
+    else:
+        st.session_state['is_candidate_info_valid'] = True
+        st.success("후보자 정보가 입력되었습니다.")
+
 if option_choice == "이벤트 정보 입력":
 
     su.script_text_writer(r_load, 'tab2_info')
