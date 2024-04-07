@@ -207,7 +207,8 @@ class WeightedVote:
             total_prizes += self.candidates.polling_event[i].prize_count
             user_list.append(list(self.candidates.polling_event[i].event_participants.keys()))
         prize_list = list(self.event_data["event_prize_count_list"])
-        st.write(f"참가자 리스트: {user_list}")
+        for i in range(len(user_list)):
+            st.write(f"이벤트{i+1} 참가자 리스트: {user_list[i]}")
         st.write(f"상품 수 리스트: {prize_list}")
         st.write(f"상품 수 총합: {total_prizes}")
         return dfs(user_list, prize_list, total_prizes)
