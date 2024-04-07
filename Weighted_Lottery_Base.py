@@ -164,8 +164,11 @@ class WeightedVote:
         for index in range(self.candidates.polling_event[polling_index].prize_count):
             selected_candidate = self.select_one_candidate(polling_index)
             while prevent_duplicate == True and selected_candidate in self.total_picked_candidates or selected_candidate in candidates:
+                if show_progress:
+                    time.sleep(sleep_time)   
                 st.write(f":gray[중복 발생] {index+1}번째 당첨자: {selected_candidate} (이미 당첨됨)")
-                selected_candidate = self.select_one_candidate(polling_index)            
+                selected_candidate = self.select_one_candidate(polling_index)
+         
             st.write(f"{index+1}번째 당첨자: {selected_candidate}")
             candidates.append(selected_candidate)
             if prevent_duplicate:
