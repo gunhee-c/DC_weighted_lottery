@@ -24,6 +24,7 @@ def dfs(lst, counts, total_picks):
         return False
     #종결조건1: 다음 리스트가 카운트해야하는 수보다 적을 때
     if len(lst[0]) < counts[0]:
+        st.error(f"반례: {lst[0]}, {counts[0]}")
         return False
     
     #종결조건2: 마지막 리스트에 남은 수가 카운트해야하는 수보다 많을 때
@@ -36,6 +37,7 @@ def dfs(lst, counts, total_picks):
         new_lst = [list(set(sublst) - set(comb)) for sublst in lst[1:]] 
         flag = dfs(new_lst, counts[1:], new_picks)
         if flag == False:
+            st.error(f"반례: {comb}")
             return False
 
     return True
@@ -275,7 +277,7 @@ class WeightedVote:
                 self.purge()
         elif polling_radio == "전체: 중복 제외":
             if self.is_prevent_duplicate_possible() == False:
-                st.error("상품 수가 총 참가자보다 많습니다.")
+                st.error("중복 제외 추첨이 불가능합니다.")
                 st.stop()
             sleep_time = st.number_input("투표 시간 간격 (0.1초 ~ 10초)", value=1.0, step=0.1, min_value=0.1, max_value = 10.0, key="sleep_time", format="%f")
             if vote:
