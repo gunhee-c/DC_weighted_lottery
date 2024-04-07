@@ -216,7 +216,7 @@ class WeightedVote:
             #st.write(f"Total Weight: {total_weight_rounded}")
             probabilities = {candidate: weight / total_weight for candidate, weight in self.candidates.polling_event[i].event_evaluated.items()}
             
-            with st.expander(f"Probabilities of event {i+1}:"):
+            with st.expander(f"{self.event_data["event_name_list"][i]} 참가자들의 당첨 확률:"):
                 for candidate, probability in probabilities.items():
                     prob_percent = probability * 100
                     formatted_probability = f"{prob_percent:.2f}" 
@@ -230,7 +230,7 @@ class WeightedVote:
                     winners[selected_candidate] += 1
                 else:
                     winners[selected_candidate] = 1
-            st.write(f"Total Winner counts after {how_many_trials} trials: ")
+            st.write(f"{how_many_trials}번 반복 후 각 참가자들의 당첨 횟수: ")
             st.write(winners)
     
     def practice_polling(self):
