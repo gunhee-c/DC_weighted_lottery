@@ -116,10 +116,7 @@ if option_choice == "페이지 소개":
 
 if option_choice == "후보자 정보 입력":
     su.script_text_writer(r_load, 'tab1_info')
-    event_candidate_list = []
 
-    for i in range(len(event_state_pack["event_data_list"])):
-        event_candidate_list.append(event_state_pack["event_data_list"][i])
 
     num_candidates = sw.get_user_count(key="tab1", state = st.session_state['candidate_count'])
 
@@ -133,6 +130,10 @@ if option_choice == "후보자 정보 입력":
     st.session_state["candidate_var"] = candidates_var
     st.write(st.session_state["candidates_dict"])   
 
+
+    event_candidate_list = []
+    for i in range(len(event_state_pack["event_data_list"])):
+        event_candidate_list.append(list(event_state_pack["event_data_list"][i].keys()))
     absent_candidates = find_absent_candidates(list(st.session_state['candidates_dict'].keys()), event_candidate_list)
     
     if st.session_state['candidate_dict'] == {}:
