@@ -11,6 +11,14 @@ def round_dict_values(d, round_to=2):
         if isinstance(value, float):
             # If the value is a float, round it
             rounded_dict[key] = str(round(value, round_to))
+        elif isinstance(value, str) and "." in value:
+            # If the value is a string that represents a float, try to round it
+            try:
+                numeric_value = float(value)
+                rounded_dict[key] = str(round(numeric_value, round_to))
+            except ValueError:
+                # If conversion fails, keep the original string
+                rounded_dict[key] = value
         else:
             # Otherwise, copy the value as is
             rounded_dict[key] = str(value)
@@ -200,7 +208,7 @@ class WeightedVote:
             eval_round1 = round_dict_values(probabilities)
             st.write(eval_round1, 3)
         
-            how_many_trials = st.number_input("How many trials?", value=100, step=1, min_value=1, max_value= 10000, key=f'trial_{i}', format="%d")
+            how_many_trials = st.number_input("How many trials? (max = 10000)", value=100, step=1, min_value=1, max_value= 10000, key=f'trial_{i}', format="%d")
             winners = {}
             for _ in range(how_many_trials):
                 selected_candidate = self.select_one_candidate(i)
