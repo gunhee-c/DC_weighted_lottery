@@ -89,39 +89,13 @@ def search_winners(event_list, event_prize, winner_list):
 
 def show_winners(event_list, event_prize, winner_list):
     st.write(f"{event_prize} 추첨 결과: ")
-    show = st.button("당첨자 확인")
     show_once = st.checkbox("그냥보여주세요")
-    st.session_state.count = 0
-    st.session_state.event_count = 0
-    st.session_state.current_max_index = 0
-    st.session_state.current_index = 0
-    count = st.session_state.count
-    event_count = st.session_state.event_count
-    current_max_index = st.session_state.current_max_index
-    current_index = st.session_state.current_index
-    
     if show_once:
         for i in range(len(event_list)):
             st.write(f"{event_list[i]} 당첨자:") 
             st.write(f"{winner_list[i]}")
 
-    if show:
-        count += 1
-
-    for i in range(count):
-        current_max_index = len(winner_list[event_count])
         
-        st.header(f"{event_list[event_count]} 당첨자:")
-        if current_index != 0:
-            st.success(f"{winner_list[event_count][i-1]}")
-        current_index += 1
-        if current_index == current_max_index:
-            current_index = 0
-            event_count += 1
-        if event_count == len(event_list):
-            st.header("모든 추첨이 완료되었습니다.")
-            break
-
 def buffer_event_state(event_state_pack, num_events):
     len_states = len(event_state_pack["event_name_list"])
     if num_events > len_states:
