@@ -287,7 +287,7 @@ if option_choice == "데이터 확인":
                               st.session_state.event_var_list[i])
         polling_base.write_streamlit()
         st.write("---")
-        polling_simulation = WeightedVote(polling_base)
+        polling_simulation = WeightedVote(polling_base, event_state_pack)
         polling_simulation.verify_probability()
         st.write("---")
 
@@ -301,7 +301,7 @@ if option_choice == "추첨 진행":
                           st.session_state.event_formula_list[i], \
                           st.session_state["candidate_var"], \
                           st.session_state.event_var_list[i])
-    polling_simulation_to_go = WeightedVote(polling_base_to_go)
+    polling_simulation_to_go = WeightedVote(polling_base_to_go, event_state_pack)
     polling_simulation_to_go.practice_polling()
 if option_choice == "결과 확인":
     su.script_text_writer(r_load, 'tab4_info')

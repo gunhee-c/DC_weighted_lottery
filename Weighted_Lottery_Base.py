@@ -132,10 +132,10 @@ class PollingEvent:
 
 class WeightedVote:
 
-    def __init__(self, candidates):
+    def __init__(self, candidates, event_data):
         self.candidates = candidates
         self.total_picked_candidates = []
-
+        self.event_data = event_data
     def do_weighted_vote(self, type = "One By One", sleep_time = None, duplicate = False):
         if type == "One By One":
             return self.poll_one_event(duplicate)
@@ -225,7 +225,7 @@ class WeightedVote:
             how_many_trials = st.number_input("How many trials? (max = 10000)", value=100, step=1, min_value=1, max_value= 10000, key=f'trial_{i}', format="%d")
             winners = {}
             for _ in range(how_many_trials):
-                selected_candidate = self.select_one_candidate(i, False, 0)
+                selected_candidate = self.select_one_candidate(i)
                 if selected_candidate in winners:
                     winners[selected_candidate] += 1
                 else:
