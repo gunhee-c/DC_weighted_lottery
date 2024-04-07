@@ -89,8 +89,11 @@ def show_winners(event_list, event_prize, winner_list):
             st.write(f"상품: {event_prize[i]} 입니다!!")
 
 def show_winners_gradually(event_list, event_prize, winner_list):
-    st.write("당첨자 발표를 시작합니다.")
-        
+    with st.expander("당첨자 발표:"):
+        num_input = st.number_input("출력할 당첨자 수를 입력하세요", value=1, step=1, min_value=1, max_value = 1000, key=f'num_input', format="%d")
+        if num_input > len(winner_list[0]):
+            st.error("출력할 수 있는 당첨자 수보다 많습니다.")
+            st.stop()    
 def buffer_event_state(event_state_pack, num_events):
     len_states = len(event_state_pack["event_name_list"])
     if num_events > len_states:
