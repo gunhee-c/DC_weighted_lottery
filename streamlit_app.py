@@ -68,7 +68,7 @@ def search_winners(event_list, event_prize, winner_list):
     temporary_text = ":rainbow[_" +text + "님은 과연..??_]" 
     if text != "":
         st.header(temporary_text)
-    time.sleep(2)
+    time.sleep(1.5)
     if text not in st.session_state["candidates_dict"].keys():
         st.error("잘못된 유저 이름입니다.")
         st.write("유저 명단: " + show_candidate_list(list(st.session_state["candidates_dict"].keys())))
@@ -91,7 +91,7 @@ def show_winners(event_list, event_prize, winner_list):
 def show_winners_gradually(event_list, event_prize, winner_list):
     for i in range(len(event_list)):
         with st.expander(f"{event_list[i]} 당첨자 발표:"):
-            num_input = st.number_input("출력할 당첨자 수를 입력하세요", value=0, step=1, min_value=0, max_value = len(winner_list[i]), key=f'num_input{i}', format="%d")
+            num_input = st.number_input(f"출력할 당첨자 수를 입력하세요 *(총{event_prize[i]}명)*", value=0, step=1, min_value=0, max_value = len(winner_list[i]), key=f'num_input{i}', format="%d")
             for j in range(num_input):
                 st.success(winner_list[i][j]+ "님 축하드립니다!")
 
