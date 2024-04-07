@@ -137,9 +137,9 @@ if option_choice == "후보자 정보 입력":
     st.write(event_candidate_list)
     absent_candidates = find_absent_candidates(list(st.session_state['candidates_dict'].keys()), event_candidate_list)
     
-    if st.session_state['candidate_dict'] == {}:
+    if st.session_state['candidates_dict'] == {}:
         st.error("후보자 정보를 입력해주세요.")      
-    elif "" in st.session_state['candidate_dict'].keys():
+    elif "" in st.session_state['candidates_dict'].keys():
         st.error("후보자 정보를 입력을 완료하세요.")
     elif "" in st.session_state['candidate_var']:
         st.error("후보자 변수를 입력해주세요.")
