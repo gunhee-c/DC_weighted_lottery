@@ -289,7 +289,8 @@ if option_choice == "데이터 확인 / 추첨 진행":
         st.write("---")
         polling_simulation = WeightedVote(polling_base)
         polling_simulation.verify_probability()
-        
+        st.write("---")
+        polling_simulation.practice_polling()
 #, event_dict, prize_name, prize_count, formula, var1, var2):
 if option_choice == "결과 확인":
     su.script_text_writer(r_load, 'tab4_info')
