@@ -162,15 +162,23 @@ def get_event_info(key, var_name, event_state, i):
         event_formula_info(var_name, event_var)
     return event_prize, event_prize_count, event_formula, event_var
 
-def get_event_candidate_info(key, num_participants, states, total_users_dict):
+def get_event_candidate_info(key, num_participants, states, total_users_dict, pickme_state):
     #userinput_widget(키, 참여자 수, 참여자 정보, 토탈 유저 명단, 지정했는지 여부)
         #user_input_dict = userinput_widget(key, num_candidates, num_state, candidate_dict, max_users)
+
+    if pickme_state == "*None*":
+        pickme_index = 0
+    elif pickme_state == "Yes":
+        pickme_index = 1
+    elif pickme_state == "No":
+        pickme_index = 2
 
     pickme = st.radio(
         key = key,
         label= "해당 이벤트 후보자 = 전체 후보자인가요?",
         options = ["*None*","Yes", "No"],
         horizontal=True,
+        index = pickme_index
     )
     if pickme == "*None*":
         st.error("하나를 선택해주세요.")
@@ -191,7 +199,7 @@ def get_event_candidate_info(key, num_participants, states, total_users_dict):
         event_data = candidate_info_receiver(key+"No", num_candidates, states, total_users_dict)
         st.write("참가자 명단을 확인하세요")
         st.write(total_users_dict)  
-    return event_data
+    return event_data, pickme
 
 def event_formula_info(var1, var2):
     st.write(f"가중치 계산식 예시: {var1} + {var2}")

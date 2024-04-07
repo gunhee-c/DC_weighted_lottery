@@ -24,6 +24,7 @@ if 'current_page' not in st.session_state:
     st.session_state.event_var_list = [""]
     st.session_state.event_user_count = [0]
     st.session_state.event_name_selected = [False]
+    st.session_state.event_pickme_state = ["*None*"]
 
 event_state_pack = {
     "event_name_list": st.session_state.event_name_list,
@@ -33,7 +34,9 @@ event_state_pack = {
     "event_formula_list": st.session_state.event_formula_list,
     "event_var_list": st.session_state.event_var_list,
     "event_user_count": st.session_state.event_user_count,
-    "event_name_selected": st.session_state.event_name_selected
+    "event_name_selected": st.session_state.event_name_selected,
+    "event_pickme_state": st.session_state.event_pickme_state
+
 }
 
 #Pending
@@ -46,6 +49,7 @@ def update_event_states(event_list_dict):
     st.session_state.event_var_list = event_list_dict["event_var_list"]
     st.session_state.event_user_count = event_list_dict["event_user_count"]
     st.session_state.event_name_selected = event_list_dict["event_name_selected"]
+    st.session_state.event_pickme_state = event_list_dict["event_pickme_state"]
 
 def buffer_event_state(event_state_pack, num_events):
     if num_events > len(event_state_pack["event_name_list"]):
@@ -61,6 +65,7 @@ def buffer_event_state(event_state_pack, num_events):
         event_state_pack["event_var_list"].append("")
         event_state_pack["event_user_count"].append(0)
         event_state_pack["event_name_selected"].append(False)
+        event_state_pack["event_pickme_state"].append("*None*")
     return event_state_pack
 
 
@@ -135,10 +140,12 @@ if option_choice == "이벤트 정보 입력":
             event_state_pack["event_formula_list"][i] = event_formula
             event_state_pack["event_var_list"][i] = event_var
             event_state_pack["event_name_selected"][i] = event_name_selected
-            event_users = sw.get_event_candidate_info(key, event_state_pack["event_user_count"][i],
+            event_users, pickme_state = sw.get_event_candidate_info(key, event_state_pack["event_user_count"][i],
                                                       event_state_pack["event_data_list"][i], 
-                                                      st.session_state["candidates_dict"])
+                                                      st.session_state["candidates_dict"],
+                                                      event_state_pack["event_pickme_state"][i],)
             event_state_pack["event_data_list"][i] = event_users
+            event_state_pack["event_pickme_state"][i] = pickme_state
 
     st.write("---")
 
