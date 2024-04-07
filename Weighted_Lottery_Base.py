@@ -10,9 +10,9 @@ class Candidate:
         """Initialize the candidate with name and initial values."""
         self.candidate_dict = candidate_dict
         self.polling_event = []
-        var1 = ""
-        var2_list = []
-        formula_list = []    
+        self.var1 = ""
+        self.var2_list = []
+        self.formula_list = []    
     
     def parse_polling_formula(self, formula, var1, var2):
         # Define the symbols
