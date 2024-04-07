@@ -90,13 +90,7 @@ def show_winners(event_list, event_prize, winner_list):
         st.write("---")
 
 def show_winners_gradually(event_list, event_prize, winner_list):
-    for i in range(len(event_list)):
-        show_list = show_candidate_list(winner_list[i])
-        st.title(f"{event_list[i]} 당첨자:")
-        st.write(f":gray[(상품): {event_prize[i]}]") 
-        st.header(f"{show_list}")  
-        st.write("---")
-        time.sleep(2)
+    st.write("당첨자 발표를 시작합니다.")
         
 def buffer_event_state(event_state_pack, num_events):
     len_states = len(event_state_pack["event_name_list"])
