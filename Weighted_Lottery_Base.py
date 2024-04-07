@@ -263,7 +263,12 @@ class WeightedVote:
             st.write(f"{how_many_trials}번 반복 후 각 참가자들의 당첨 횟수: ")
             st.write(winners)
     
-    def practice_polling(self):
+    def execute_polling(self, button_state):
+        ans = []
+        produce_result = False
+        if button_state == True:
+            st.error("이미 투표가 진행되었습니다.")
+            st.stop()
         st.title("한번 투표해봅시다:")
         vote = st.button("try!")
         polling_radio = st.radio("전체 vs 단일 이벤트", options = ["전체: 중복 제외", "전체: 중복 허용", "단일 이벤트", "*실전으로*"], key = "polling_type", index = None, horizontal = True)
@@ -276,7 +281,7 @@ class WeightedVote:
                 sleep_time = st.number_input("투표 시간 간격 (0.1초 ~ 10초)", value=1.0, step=0.1, min_value=0.1, max_value = 10.0, key="sleep_time", format="%f")
             if vote:
                 st.write("투표 결과: ")
-                self.poll_one_event(polling_index, sleep_time, prevent_duplicate = False, show_progress= True)
+                ans = self.poll_one_event(polling_index, sleep_time, prevent_duplicate = False, show_progress= True)
                 self.purge()
         elif polling_radio == "전체: 중복 제외":
             if self.is_prevent_duplicate_possible() == False:
@@ -285,21 +290,28 @@ class WeightedVote:
             sleep_time = st.number_input("투표 시간 간격 (0.1초 ~ 10초)", value=1.0, step=0.1, min_value=0.1, max_value = 10.0, key="sleep_time", format="%f")
             if vote:
                 st.write("투표 결과: ")
-                self.poll_all_events(sleep_time, prevent_duplicate = True, show_progress = True)
+                ans = self.poll_all_events(sleep_time, prevent_duplicate = True, show_progress = True)
                 self.purge()
         elif polling_radio == "전체: 중복 허용":
             sleep_time = st.number_input("투표 시간 간격 (0.1초 ~ 10초)", value=1.0, step=0.1, min_value=0.1, max_value = 10.0, key="sleep_time", format="%f")
             if vote:
                 st.write("투표 결과: ")
-                self.poll_all_events(sleep_time, prevent_duplicate = False, show_progress = True)
+                ans = self.poll_all_events(sleep_time, prevent_duplicate = False, show_progress = True)
                 self.purge()
         else:
             st.title("실전 투표:")
-            st.button("*투표 진행하기*")
+            real_vote = st.button("**투표 진행하기**")
+            dup = st.checkbox("중복 허용")
+            if dup:
+                duplicate = False
+                st.success("중복을 **허용**합니다")
+            else:
+                duplicate = True
+                st.success("중복을 **제외**합니다")
+            if real_vote:
+                ans = self.poll_all_events(0.1, prevent_duplicate = duplicate, show_progress = False)
+                st.write("결과는 다음 탭에서 확인하세요")
+                produce_result = True             
+                button_state = True
+        return ans, produce_result, button_state
 
-    def get_result(self):
-        st.title("당첨자 발표:")
-        st.button("RE:")
-        poll_results = self.poll_all_events(1, prevent_duplicate = True, show_progress = False)
-        self.announce_winner(poll_results)
-        return 

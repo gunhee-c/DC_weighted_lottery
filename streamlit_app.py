@@ -29,6 +29,9 @@ if 'current_page' not in st.session_state:
     st.session_state.event_pickme_state = ["*None*"]
     st.session_state.event_valid = [False]
 
+    st.session_state.final_result = []
+    st.session_state['button_clicked'] = False
+
 event_state_pack = {
     "event_name_list": st.session_state.event_name_list,
     "event_data_list": st.session_state.event_data_list,
@@ -307,8 +310,18 @@ if option_choice == "추첨 진행":
                           st.session_state["candidate_var"], \
                           st.session_state.event_var_list[i])
     polling_simulation_to_go = WeightedVote(polling_base_to_go, event_state_pack)
-    polling_simulation_to_go.practice_polling()
+    ans, result_made, button_state = polling_simulation_to_go.execute_polling(st.session_state["button_clicked"])
+
+    if result_made: 
+        st.session_state.final_result = ans
+        st.session_state["button_clicked"] = button_state
+
 if option_choice == "결과 확인":
+    st.write("추첨 결과: ")
+    if st.session_state.final_result == []:
+        st.error("추첨 결과가 없습니다.")
+    else:
+        st.write(st.session_state.final_result)
     su.script_text_writer(r_load, 'tab4_info')
 
 if option_choice == "디버깅":
