@@ -39,7 +39,7 @@ def dfs(lst, counts, total_picks):
         if flag == False:
             st.error(f"이전에 뽑힌 사람: {comb}")
             return False
-    st.success("중복 제외 추첨 가능합니다.")
+    #st.success("중복 제외 추첨 가능합니다.")
     return True
 
 
@@ -287,6 +287,8 @@ class WeightedVote:
             if self.is_prevent_duplicate_possible() == False:
                 st.error("중복 제외 추첨이 불가능합니다.")
                 st.stop()
+            else:
+                st.success("중복 제외 추첨이 가능합니다.")
             sleep_time = st.number_input("투표 시간 간격 (0.1초 ~ 10초)", value=1.0, step=0.1, min_value=0.1, max_value = 10.0, key="sleep_time", format="%f")
             if vote:
                 st.write("투표 결과: ")
