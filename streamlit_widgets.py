@@ -79,8 +79,7 @@ def unit_userinput_widget(key, i, current_name, current_score, total_user_list, 
     with col2:  # Use the second column for the score input
         score = assign_score_widget(key, i, addme, current_score)
 
-    if is_assigned == False:
-        check_user_input(name, total_user_list, current_user_list)
+    check_user_input(name, total_user_list, current_user_list)
 
     return [name, score]
 
