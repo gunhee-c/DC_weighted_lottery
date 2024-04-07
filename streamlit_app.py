@@ -231,7 +231,7 @@ if option_choice == "이벤트 정보 입력":
             event_state_pack["event_var_list"][i] = event_var
             event_state_pack["event_name_selected"][i] = event_name_selected
             if event_state_pack["event_name_list"][i] == "":
-                event_state_pack["event_name_list"][i] = f"{event_state_pack["event_prize_list"][i]} 이벤트"
+                event_state_pack["event_name_list"][i] = f"{event_prize} 이벤트"
 
             event_users, pickme_state, event_user_count = sw.get_event_candidate_info(key, event_state_pack["event_user_count"][i],
                                                       event_state_pack["event_data_list"][i], 
