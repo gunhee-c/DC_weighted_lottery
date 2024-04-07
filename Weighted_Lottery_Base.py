@@ -236,7 +236,7 @@ class WeightedVote:
     
     def verify_probability(self):
         st.title(f"이벤트 확률 검증: ")
-        st.button("다시하기:")
+        st.button("RE:")
         for i in range(len(self.candidates.polling_event)):
 
             total_weight = sum(self.candidates.polling_event[i].event_evaluated.values())
@@ -264,8 +264,8 @@ class WeightedVote:
     
     def practice_polling(self):
         st.title("한번 투표해봅시다:")
-        vote = st.button("투표하기")
-        polling_radio = st.radio("전체 vs 단일 이벤트", options = ["전체: 중복 제외", "전체: 중복 허용", "단일 이벤트"], key = "polling_type", index = None, horizontal = True)
+        vote = st.button("try!")
+        polling_radio = st.radio("전체 vs 단일 이벤트", options = ["전체: 중복 제외", "전체: 중복 허용", "단일 이벤트", "none"], key = "polling_type", index = None, horizontal = True)
         if polling_radio == "단일 이벤트":
             col1, col2 = st.columns(2)
 
@@ -292,3 +292,12 @@ class WeightedVote:
                 st.write("투표 결과: ")
                 st.write(self.poll_all_events(sleep_time, prevent_duplicate = False, show_progress = True))
                 self.purge()
+        else:
+            pass
+
+    def get_result(self):
+        st.title("당첨자 발표:")
+        st.button("RE:")
+        poll_results = self.poll_all_events(1, prevent_duplicate = True, show_progress = False)
+        self.announce_winner(poll_results)
+        return 
