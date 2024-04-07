@@ -135,14 +135,6 @@ if option_choice == "추첨 정보":
                                                       event_state_pack["event_data_list"][i], 
                                                       st.session_state["candidates_dict"])
             event_state_pack["event_data_list"][i] = event_users
-    event_list_dict = \
-    sw.get_event_information(key="tab2", num_events = st.session_state["event_count"], \
-                       total_candidate_dict = st.session_state["candidates_dict"], \
-                       total_candidate_var_name = st.session_state["candidate_var"],\
-                       event_state_pack = event_state_pack)
-    #def get_event_input(key, num_events, users_dict, var_name):
-
-    update_event_states(event_list_dict)
 
     st.write("---")
 
