@@ -1,6 +1,7 @@
 from sympy import symbols, sympify
 import random
 import time
+import streamlit as st
 
 class Candidate:
     
@@ -52,7 +53,6 @@ class Candidate:
             return polling_weight
         
         expression, is_valid = self.parse_polling_formula(parsing_formula, var1, var2)
-
         if not is_valid:
             polling_weight = {}
             for key in event.event_participants:
@@ -77,7 +77,21 @@ class Candidate:
         details = ["Candidate", str(self.candidate_dict), "\nPolling Event"]
         details.extend(str(event) for event in self.polling_event)
         return "\n".join(details)
-    
+    def write_streamlit(self):
+        st.write("Candidate Info")
+        st.write(self.candidate_dict)
+        for i in range(len(self.polling_event)):
+            st.write(f"Polling Event{i+1}:")
+            st.write("Participants:")
+            st.write(self.polling_event[i].event_participants)
+            st.write("Prize Name:")
+            st.write(self.polling_event[i].prize_name)
+            st.write("Prize Count:")
+            st.write(self.polling_event[i].prize_count)
+            st.write("Evaluation:")
+            st.write(self.polling_event[i].event_evaluated)
+        return None        
+
 class PollingEvent:
     def __init__(self, event_dict, prize_name, prize_count):
         print("hi")
