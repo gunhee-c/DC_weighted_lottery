@@ -220,7 +220,7 @@ class WeightedVote:
             how_many_trials = st.number_input("How many trials? (max = 10000)", value=100, step=1, min_value=1, max_value= 10000, key=f'trial_{i}', format="%d")
             winners = {}
             for _ in range(how_many_trials):
-                selected_candidate = self.select_one_candidate(i)
+                selected_candidate = self.select_one_candidate(i, False, 0)
                 if selected_candidate in winners:
                     winners[selected_candidate] += 1
                 else:
