@@ -24,6 +24,7 @@ if 'current_page' not in st.session_state:
     st.session_state.event_var_list = [""]
     st.session_state.event_user_count = [0]
     st.session_state.event_name_selected = [False]
+
 event_state_pack = {
     "event_name_list": st.session_state.event_name_list,
     "event_data_list": st.session_state.event_data_list,
@@ -79,6 +80,7 @@ def get_event_name(i, value):
     if event_name:
         get_event_name = st.text_input("이벤트 명을 입력하세요", value = st.session_state["event_name_list"][i], \
                                         key=f'event_name_{i}')
+        value = True
     else:
         get_event_name = ""
     return get_event_name, value
