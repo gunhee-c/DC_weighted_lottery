@@ -53,10 +53,16 @@ def update_event_states(event_list_dict):
     st.session_state.event_pickme_state = event_list_dict["event_pickme_state"]
 
 def buffer_event_state(event_state_pack, num_events):
-    if num_events > len(event_state_pack["event_name_list"]):
-        buffer = num_events - len(event_state_pack["event_name_list"])
+    len_states = len(event_state_pack["event_name_list"])
+    if num_events > len_states:
+        buffer = num_events - len_states
     else:
         buffer = 0
+    
+    if num_events < len_states:
+        reduce = len_states - num_events
+    else:
+        reduce = 0
     for _ in range(buffer):
         event_state_pack["event_name_list"].append("")
         event_state_pack["event_data_list"].append({})
@@ -67,6 +73,18 @@ def buffer_event_state(event_state_pack, num_events):
         event_state_pack["event_user_count"].append(0)
         event_state_pack["event_name_selected"].append(False)
         event_state_pack["event_pickme_state"].append("*None*")
+    
+    for _ in range(reduce):
+        event_state_pack["event_name_list"].pop()
+        event_state_pack["event_data_list"].pop()
+        event_state_pack["event_prize_list"].pop()
+        event_state_pack["event_prize_count_list"].pop()
+        event_state_pack["event_formula_list"].pop()
+        event_state_pack["event_var_list"].pop()
+        event_state_pack["event_user_count"].pop()
+        event_state_pack["event_name_selected"].pop()
+        event_state_pack["event_pickme_state"].pop()    
+    
     return event_state_pack
 
 
@@ -173,13 +191,13 @@ if option_choice == "이벤트 정보 입력":
             event_state_pack["event_formula_list"][i] = event_formula
             event_state_pack["event_var_list"][i] = event_var
             event_state_pack["event_name_selected"][i] = event_name_selected
-            event_users, pickme_state = sw.get_event_candidate_info(key, event_state_pack["event_user_count"][i],
+            event_users, pickme_state, event_user_count = sw.get_event_candidate_info(key, event_state_pack["event_user_count"][i],
                                                       event_state_pack["event_data_list"][i], 
                                                       st.session_state["candidates_dict"],
                                                       event_state_pack["event_pickme_state"][i],)
             event_state_pack["event_data_list"][i] = event_users
             event_state_pack["event_pickme_state"][i] = pickme_state
-
+            event_state_pack["event_user_count"][i] = event_user_count
     st.write("---")
 
 if option_choice == "데이터 확인 / 추첨 진행":

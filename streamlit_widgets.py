@@ -199,7 +199,7 @@ def get_event_candidate_info(key, num_participants, states, total_users_dict, pi
         event_data = candidate_info_receiver(key+"No", num_candidates, states, total_users_dict)
         st.write("참가자 명단을 확인하세요")
         st.write(total_users_dict)  
-    return event_data, pickme
+    return event_data, pickme, num_candidates
 
 def event_formula_info(var1, var2):
     st.write(f"가중치 계산식 예시: {var1} + {var2}")
