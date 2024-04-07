@@ -90,7 +90,7 @@ def show_winners(event_list, event_prize, winner_list):
 
 def show_winners_gradually(event_list, event_prize, winner_list):
     for i in range(len(event_list)):
-        with st.expander(f"{event_list[i]} 당첨자를 확인하세요:"):
+        with st.expander(f"{event_list[i]} 당첨자 발표:"):
             num_input = st.number_input("출력할 당첨자 수를 입력하세요", value=0, step=1, min_value=0, max_value = len(winner_list[i]), key=f'num_input{i}', format="%d")
             for j in range(num_input):
                 st.success(winner_list[i][j]+ "님 축하드립니다!")
@@ -383,7 +383,7 @@ if option_choice == "결과 확인":
     if search:
         search_winners(st.session_state.event_name_list, st.session_state.event_prize_list, st.session_state.final_result)
     else:
-        checkme = st.checkbox("당첨자 한번에 보기", value = False)
+        checkme = st.checkbox("당첨자 한번에 보기", value = None)
         if checkme:
             show_winners(st.session_state.event_name_list, st.session_state.event_prize_list, st.session_state.final_result)
         else:
