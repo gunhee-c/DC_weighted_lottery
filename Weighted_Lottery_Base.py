@@ -198,15 +198,17 @@ class WeightedVote:
         for i in range(len(self.candidates.polling_event)):
             st.title(f"Polling Event {i+1}")
             total_weight = sum(self.candidates.polling_event[i].event_evaluated.values())
-            st.write(f"Total Weight Before Rounding: {total_weight}")
-            # Use string formatting for rounding in the display
-            total_weight_rounded = f"{total_weight:.2f}"
+
+            total_weight_rounded = f"{total_weight:.3f}"
             st.write(f"Total Weight: {total_weight_rounded}")
             probabilities = {candidate: weight / total_weight for candidate, weight in self.candidates.polling_event[i].event_evaluated.items()}
             
-            st.write(f"Probabilities: ")
-            eval_round1 = round_dict_values(probabilities)
-            st.write(eval_round1)
+            st.write("Probabilities:")
+            for candidate, probability in probabilities.items():
+            # Format the probability as a percentage or a floating-point number, rounded to 2 decimal places
+            # Here, I'm showing it as a floating-point, but you could also multiply by 100 and format as a percentage
+                formatted_probability = f"{probability:.2f}"  # Or use "{probability:.2%}" for percentage
+                st.write(f"{candidate}: {formatted_probability}")
         
             how_many_trials = st.number_input("How many trials? (max = 10000)", value=100, step=1, min_value=1, max_value= 10000, key=f'trial_{i}', format="%d")
             winners = {}
