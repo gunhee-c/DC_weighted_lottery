@@ -71,9 +71,9 @@ def search_winners(event_list, event_prize, winner_list):
     for i in range(len(event_list)):
         total_winner_list.append(f"{event_list[i]}: {winner_list[i]}")
     text = st.text_input("찾고자 하는 사람을 입력해주세요.")
-    temporary_text = (text + "님은 과연 합격자 명단에 존재할까요??") 
+    temporary_text = ":rainbow[_" +text + "님은 과연 합격자 명단에 존재할까요??_]" 
     if text != "":
-        st.write(temporary_text)
+        st.header(temporary_text)
     time.sleep(2)
     if text not in st.session_state["candidates_dict"].keys():
         st.error("잘못된 유저 이름입니다.")
