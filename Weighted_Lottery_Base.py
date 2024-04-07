@@ -232,24 +232,28 @@ class WeightedVote:
         st.title("한번 투표해봅시다:")
         vote = st.button("투표하기")
         polling_radio = st.radio("전체 vs 단일 이벤트", options = ["전체: 중복 제외", "전체: 중복 허용", "단일 이벤트"], key = "polling_type", index = None, horizontal = True)
-        if polling_radio == "단일 이벤트": 
-            polling_index = st.number_input("투표 이벤트 선택", value=0, step=1, min_value=0, max_value=len(self.candidates.polling_event)-1, key="polling_index", format="%d")
-            sleep_time = st.number_input("투표 시간 간격 (0.1초 ~ 10초)", value=1.0, step=0.1, min_value=0.1, max_value = 10.0, key="sleep_time", format="%d")
+        if polling_radio == "단일 이벤트":
+            col1, col2 = st.columns(2)
+
+            with col1:
+                polling_index = st.number_input("투표 이벤트 선택", value=0, step=1, min_value=0, max_value=len(self.candidates.polling_event)-1, key="polling_index", format="%d")
+            with col2:
+                sleep_time = st.number_input("투표 시간 간격 (0.1초 ~ 10초)", value=1.0, step=0.1, min_value=0.1, max_value = 10.0, key="sleep_time", format="%f")
             if vote:
                 st.write("투표 결과: ")
-                st.write(self.poll_one_event(polling_index, sleep_time, prevent_duplicate = False, show_progress= True, index = polling_index))
+                st.write(self.poll_one_event(polling_index, sleep_time, prevent_duplicate = False, show_progress= True))
                 self.purge()
         elif polling_radio == "전체: 중복 제외":
             if self.is_prevent_duplicate_possible() == False:
                 st.error("상품 수가 총 참가자보다 많습니다.")
                 st.stop()
-            sleep_time = st.number_input("투표 시간 간격 (0.1초 ~ 10초)", value=1.0, step=0.1, min_value=0.1, max_value = 10.0, key="sleep_time", format="%d")
+            sleep_time = st.number_input("투표 시간 간격 (0.1초 ~ 10초)", value=1.0, step=0.1, min_value=0.1, max_value = 10.0, key="sleep_time", format="%f")
             if vote:
                 st.write("투표 결과: ")
                 st.write(self.poll_all_events(sleep_time, prevent_duplicate = True, show_progress = True))
                 self.purge()
         elif polling_radio == "전체: 중복 허용":
-            sleep_time = st.number_input("투표 시간 간격 (0.1초 ~ 10초)", value=1.0, step=0.1, min_value=0.1, max_value = 10.0, key="sleep_time", format="%d")
+            sleep_time = st.number_input("투표 시간 간격 (0.1초 ~ 10초)", value=1.0, step=0.1, min_value=0.1, max_value = 10.0, key="sleep_time", format="%f")
             if vote:
                 st.write("투표 결과: ")
                 st.write(self.poll_all_events(sleep_time, prevent_duplicate = False, show_progress = True))
