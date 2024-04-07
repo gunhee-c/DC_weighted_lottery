@@ -165,6 +165,7 @@ def get_event_info(key, var_name, event_state, i):
 def get_event_candidate_info(key, num_participants, states, total_users_dict):
     #userinput_widget(키, 참여자 수, 참여자 정보, 토탈 유저 명단, 지정했는지 여부)
         #user_input_dict = userinput_widget(key, num_candidates, num_state, candidate_dict, max_users)
+
     pickme = st.radio(
         key = key,
         label= "해당 이벤트 후보자 = 전체 후보자인가요?",
@@ -172,6 +173,9 @@ def get_event_candidate_info(key, num_participants, states, total_users_dict):
         horizontal=True,
         index = None
     )
+    if pickme.index == None:
+        st.error("하나를 선택해주세요.")
+        st.stop()
     max_user_count = len(list(total_users_dict.keys()))
     if pickme == "Yes":
         num_candidates = max_user_count
