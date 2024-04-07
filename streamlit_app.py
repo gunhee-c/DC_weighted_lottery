@@ -83,11 +83,10 @@ def search_winners(event_list, event_prize, winner_list):
 
 def show_winners(event_list, event_prize, winner_list):
     for i in range(len(event_list)):
-        show_list = show_candidate_list(winner_list[i])
-        st.title(f"{event_list[i]} 당첨자:")
-        st.write(f":gray[(상품): {event_prize[i]}]") 
-        st.success(f"{show_list}")  
-        st.write("---")
+        with st.expander(f"{event_list[i]} 당첨자 발표:"):
+            show_list = show_candidate_list(winner_list[i])
+            st.success(f"{show_list}")  
+            st.write(f"상품: {event_prize[i]} 입니다!!")
 
 def show_winners_gradually(event_list, event_prize, winner_list):
     st.write("당첨자 발표를 시작합니다.")
