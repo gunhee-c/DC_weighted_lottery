@@ -208,6 +208,7 @@ class WeightedVote:
     
     def verify_probability(self):
         st.title(f"이벤트 확률 검증: ")
+        st.button("다시하기:")
         for i in range(len(self.candidates.polling_event)):
 
             total_weight = sum(self.candidates.polling_event[i].event_evaluated.values())
